@@ -36,7 +36,7 @@ pnpm dev
 bun dev
 ```
 
-### Core Technologies
+## Core Technologies
 
 - **Core:** HTML, CSS, JavaScript
 - **Frontend:** React JS, Tailwind CSS, NEXT JS
