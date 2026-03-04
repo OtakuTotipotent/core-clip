@@ -64,6 +64,29 @@ export const plansData = [
   },
 ];
 
+export const faqData = [
+  {
+    question: "How does the AI generation work?",
+    answer:
+      "We leverage state-of-the-art diffusion models trained on millions of product images to blend your product into realistic scenes while preserving details, lighting & reflections.",
+  },
+  {
+    question: "Do I own the generated images?",
+    answer:
+      "Yes - you receive full commercial rights to any images and videos generated on the platform. Use them for ads, ecommerce, social media and more.",
+  },
+  {
+    question: "Can I cancel anytime?",
+    answer:
+      "Yes - you can cancel from your dashboard. You will retain access through the end of your billing period.",
+  },
+  {
+    question: "What input formats do you support?",
+    answer:
+      "We accept JPG, PNG, and WEBP. Outputs are high resolution PNGs and MP4s optimized for social platforms.",
+  },
+];
+
 export const footerLinks = [
   {
     title: "title",
