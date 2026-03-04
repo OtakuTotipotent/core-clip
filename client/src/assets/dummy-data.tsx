@@ -18,6 +18,52 @@ export const featuresData = [
   },
 ];
 
+export const plansData = [
+  {
+    id: "starter",
+    name: "Starter",
+    price: "$10",
+    desc: "Try the platform at no cost.",
+    credits: 25,
+    features: [
+      "25 Credits",
+      "Standard Quality",
+      "No watermark",
+      "Slower generation speed",
+      "Email Support",
+    ],
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    price: "$29",
+    desc: "Creators & small teams.",
+    credits: 80,
+    features: [
+      "80 Credits",
+      "HD Quality",
+      "NO watermark",
+      "Video Generation",
+      "Priority Support",
+    ],
+    popular: true,
+  },
+  {
+    id: "ultra",
+    name: "Ultra",
+    price: "$99",
+    desc: "Scale across teams & agencies",
+    credits: "300",
+    features: [
+      "300 Credits",
+      "FHD Quality",
+      "No watermark",
+      "Fast generation speed",
+      "Chat + Email Support",
+    ],
+  },
+];
+
 export const footerLinks = [
   {
     title: "title",
