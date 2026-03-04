@@ -49,9 +49,9 @@
 }
 
 @theme {
-    --color-primary: #8b5cf6;
-    --color-primary-hover: #7c3aed;
-    --color-secondary: #ec4899;
+    --color-primary: #f6339a;
+    --color-primary-hover: #e60076;
+    --color-secondary: #a11111;
     --color-dark-bg: #0f172a;
     --color-dark-card: #1e293b;
 }
