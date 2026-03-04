@@ -228,9 +228,9 @@ export default function Hero() {
                   }}
                 >
                   <div className="relative flex h-3.5 w-3.5 items-center justify-center">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping duration-300" />
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75 animate-ping duration-300" />
 
-                    <span className="relative inline-flex size-2 rounded-full bg-green-600" />
+                    <span className="relative inline-flex size-2 rounded-full bg-pink-600" />
                   </div>
                   +20 more
                 </motion.div>
