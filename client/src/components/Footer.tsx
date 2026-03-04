@@ -13,7 +13,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-white/10">
           <div>
-            <img src="/logo.svg" alt="logo" className="h-8" />
+            <img src="/logo.svg" alt="logo" className="h-12" />
             <p className="max-w-[410px] mt-6 text-sm leading-relaxed">
               Create viral UGC in seconds. Upload product images and a model
               photo - Our AI instantly produces professional lifestyle imagery
@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
 
         <p className="py-4 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} {" "} CoreClip. All rights reserved.
+          © {new Date().getFullYear()} CoreClip. All rights reserved.
         </p>
       </div>
     </motion.footer>

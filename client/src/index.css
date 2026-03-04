@@ -52,8 +52,8 @@
     --color-primary: #f6339a;
     --color-primary-hover: #e60076;
     --color-secondary: #a11111;
-    --color-dark-bg: #0f172a;
-    --color-dark-card: #1e293b;
+    --color-dark-bg: #2a0f17;
+    --color-dark-card: #3b1e29;
 }
 
 @layer utilities {

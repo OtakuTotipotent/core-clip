@@ -15,7 +15,7 @@ export const GhostButton: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ children, className, ...props }) => (
   <button
-    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium border border-white/10 bg-white/3 hover:bg-white/6 backdrop-blur-sm active:scale-95 transition ${className}`}
+    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium border border-pink-400/50 bg-white/3 hover:bg-white/6 backdrop-blur-sm active:scale-95 transition ${className}`}
     {...props}
   >
     {children}

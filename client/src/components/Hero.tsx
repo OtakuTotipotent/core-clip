@@ -133,7 +133,7 @@ export default function Hero() {
                 }}
               >
                 <div className="flex items-center gap-2 p-2 px-3 sm:px-6.5 hover:bg-white/3 transition-colors">
-                  <ZapIcon className="size-4 text-sky-500" />
+                  <ZapIcon className="size-4 text-pink-500" />
                   <div>
                     <div>Save time to create</div>
                     <div className="text-xs text-gray-400">
@@ -145,7 +145,7 @@ export default function Hero() {
                 <div className="hidden sm:block h-6 w-px bg-white/6" />
 
                 <div className="flex items-center gap-2 p-2 px-3 sm:px-6.5 hover:bg-white/3 transition-colors">
-                  <CheckIcon className="size-4 text-cyan-500" />
+                  <CheckIcon className="size-4 text-pink-500" />
                   <div>
                     <div>Commercial rights</div>
                     <div className="text-xs text-gray-400">
@@ -179,7 +179,7 @@ export default function Hero() {
                   />
 
                   <div className="absolute left-4 top-4 px-3 py-1 rounded-full bg-black/15 backdrop-blur-sm text-xs">
-                    Social-read - 9:16 & 16:9
+                    Social Ready - 9:16 & 16:9
                   </div>
 
                   <div className="absolute right-4 bottom-4">
