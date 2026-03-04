@@ -89,30 +89,27 @@ export const faqData = [
 
 export const footerLinks = [
   {
-    title: "title",
+    title: "Quick Links",
     links: [
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
+      { name: "Home", url: "#" },
+      { name: "Features", url: "#" },
+      { name: "Pricing", url: "#" },
+      { name: "FAQ", url: "#" },
     ],
   },
   {
-    title: "title",
+    title: "Legal",
     links: [
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
+      { name: "Privacy Policy", url: "#" },
+      { name: "Terms of Service", url: "#" },
     ],
   },
   {
-    title: "title",
+    title: "Socials",
     links: [
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
-      { name: "link", url: "#" },
+      { name: "Twitter/X", url: "#" },
+      { name: "LinkedIn", url: "#" },
+      { name: "GitHub", url: "#" },
     ],
   },
 ];
