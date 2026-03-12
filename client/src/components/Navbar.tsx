@@ -8,9 +8,9 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/#" },
-    { name: "Features", href: "/#features" },
-    { name: "Pricing", href: "/#pricing" },
-    { name: "FAQ", href: "/#faq" },
+    { name: "Create", href: "/#generate" },
+    { name: "Community", href: "/#community" },
+    { name: "Plans", href: "/#plans" },
   ];
 
   return (
@@ -31,7 +31,7 @@ export default function Navbar() {
             <a
               href={link.href}
               key={link.name}
-              className="hover:text-white transition"
+              className="hover:text-pink-500 transition"
             >
               {link.name}
             </a>
