@@ -7,6 +7,7 @@ import {
   Loader2Icon,
   Share2Icon,
   Trash2Icon,
+  VideoIcon,
 } from "lucide-react";
 import { GhostButton, PrimaryButton } from "./Buttons";
 
@@ -39,7 +40,7 @@ const ProjectCard = ({
       <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition group">
         {/* Preview */}
         <div
-          className={`${gen?.aspectRatio === "9:16" ? "aspect-9/16" : "aspect-video"}`}
+          className={`relative ${gen?.aspectRatio === "9:16" ? "aspect-9/16" : "aspect-video"}`}
         >
           {gen.generatedImage && (
             <img
@@ -116,24 +117,37 @@ const ProjectCard = ({
                       download
                       className="flex gap-2 items-center px-4 py-2 hover:bg-black/10 cursor-pointer"
                     >
-                      <ImageIcon size={14} /> Download Video
+                      <VideoIcon size={14} /> Download Video
                     </a>
                   )}
 
-                  {(gen.generatedVideo || gen.generatedImage) && (
-                    <button
-                      className="w-full flex gap-2 items-center px-4 py-2 hover:bg-black/10 cursor-pointer"
-                      onClick={() =>
-                        navigator.share({
-                          url: gen.generatedVideo || gen.generatedImage,
-                          title: gen.productName,
-                          text: gen.productDescription,
-                        })
+                  <button
+                    className="w-full flex gap-2 items-center px-4 py-2 hover:bg-black/10 cursor-pointer"
+                    onClick={() => {
+                      if (navigator.share) {
+                        navigator
+                          .share({
+                            url: gen.generatedVideo || gen.generatedImage,
+                            title: gen.productName,
+                            text: gen.productDescription,
+                          })
+                          .catch((err) => {
+                            console.error("Share failed:", err);
+                          });
+                      } else {
+                        // Fallback: copy link to clipboard
+                        const url = gen.generatedVideo || gen.generatedImage;
+                        if (url) {
+                          navigator.clipboard.writeText(url);
+                          alert("Link copied to clipboard!");
+                        } else {
+                          alert("No shareable content available.");
+                        }
                       }
-                    >
-                      <Share2Icon size={14} /> Share
-                    </button>
-                  )}
+                    }}
+                  >
+                    <Share2Icon size={14} /> Share
+                  </button>
 
                   <button
                     onClick={() => handleDelete(gen.id)}
@@ -157,7 +171,7 @@ const ProjectCard = ({
               src={gen.uploadedImages[1]}
               alt="model"
               className="w-16 h-16 object-cover rounded-full animate-float -ml-8"
-              style={{ animation: "3s" }}
+              style={{ animation: "float 3s infinite" }}
             />
           </div>
         </div>
