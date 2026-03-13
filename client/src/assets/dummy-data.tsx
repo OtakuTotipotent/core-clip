@@ -9,7 +9,7 @@ export const assets = {};
 export const dummyGenerations = [
   {
     id: "gen_1",
-    aspectRatio: "9:16",
+    aspectRatio: "16:9",
     productDescription: "Sky Colored Trolly Bag",
     productName: "Trolly Bag",
     targetLength: 5,
@@ -41,7 +41,7 @@ export const dummyGenerations = [
   },
   {
     id: "gen_3",
-    aspectRatio: "9:16",
+    aspectRatio: "16:9",
     productDescription: "Sky Colored Trolly Bag",
     productName: "Trolly Bag",
     targetLength: 5,
@@ -57,7 +57,7 @@ export const dummyGenerations = [
   },
   {
     id: "gen_4",
-    aspectRatio: "9:16",
+    aspectRatio: "16:9",
     productDescription: "Sky Colored Trolly Bag",
     productName: "Trolly Bag",
     targetLength: 5,
@@ -73,7 +73,7 @@ export const dummyGenerations = [
   },
   {
     id: "gen_5",
-    aspectRatio: "9:16",
+    aspectRatio: "16:9",
     productDescription: "Sky Colored Trolly Bag",
     productName: "Trolly Bag",
     targetLength: 5,
