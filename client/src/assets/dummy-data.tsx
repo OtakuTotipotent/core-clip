@@ -1,4 +1,93 @@
 import { UploadIcon, VideoIcon, ZapIcon } from "lucide-react";
+import product1 from "./product1.png";
+import model1 from "./model1.png";
+import generated1 from "./generated1.png";
+import generatedVideo1 from "./generatedVideo1.mp4";
+
+export const assets = {};
+
+export const dummyGenerations = [
+  {
+    id: "gen_1",
+    aspectRatio: "9:16",
+    productDescription: "Sky Colored Trolly Bag",
+    productName: "Trolly Bag",
+    targetLength: 5,
+    uploadedImages: [product1, model1],
+    userId: "user_1",
+    userPrompt: "Create the video where center of attraction is a trolly bag",
+    generatedImage: generated1,
+    generatedVideo: generatedVideo1,
+    isGenerating: false,
+    isPublished: false,
+    createdAt: "2023-03-15T00:00:00.000Z",
+    updatedAt: "",
+  },
+  {
+    id: "gen_2",
+    aspectRatio: "16:9",
+    productDescription: "Sky Colored Trolly Bag",
+    productName: "Trolly Bag",
+    targetLength: 5,
+    uploadedImages: [product1, model1],
+    userId: "user_1",
+    userPrompt: "Create the video where center of attraction is a trolly bag",
+    generatedImage: generated1,
+    generatedVideo: generatedVideo1,
+    isGenerating: false,
+    isPublished: false,
+    createdAt: "2023-03-15T00:00:00.000Z",
+    updatedAt: "",
+  },
+  {
+    id: "gen_3",
+    aspectRatio: "9:16",
+    productDescription: "Sky Colored Trolly Bag",
+    productName: "Trolly Bag",
+    targetLength: 5,
+    uploadedImages: [product1, model1],
+    userId: "user_1",
+    userPrompt: "Create the video where center of attraction is a trolly bag",
+    generatedImage: generated1,
+    generatedVideo: generatedVideo1,
+    isGenerating: false,
+    isPublished: false,
+    createdAt: "2023-03-15T00:00:00.000Z",
+    updatedAt: "",
+  },
+  {
+    id: "gen_4",
+    aspectRatio: "9:16",
+    productDescription: "Sky Colored Trolly Bag",
+    productName: "Trolly Bag",
+    targetLength: 5,
+    uploadedImages: [product1, model1],
+    userId: "user_1",
+    userPrompt: "Create the video where center of attraction is a trolly bag",
+    generatedImage: generated1,
+    generatedVideo: generatedVideo1,
+    isGenerating: false,
+    isPublished: false,
+    createdAt: "2023-03-15T00:00:00.000Z",
+    updatedAt: "",
+  },
+  {
+    id: "gen_5",
+    aspectRatio: "9:16",
+    productDescription: "Sky Colored Trolly Bag",
+    productName: "Trolly Bag",
+    targetLength: 5,
+    uploadedImages: [product1, model1],
+    userId: "user_1",
+    userPrompt: "Create the video where center of attraction is a trolly bag",
+    generatedImage: generated1,
+    generatedVideo: generatedVideo1,
+    isGenerating: false,
+    isPublished: false,
+    createdAt: "2023-03-15T00:00:00.000Z",
+    updatedAt: "",
+  },
+];
 
 export const featuresData = [
   {
