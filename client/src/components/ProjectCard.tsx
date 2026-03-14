@@ -1,14 +1,16 @@
+import type React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Project } from "../types";
-import { useState } from "react";
 import {
   EllipsisIcon,
   ImageIcon,
   Loader2Icon,
+  PlaySquareIcon,
   Share2Icon,
   Trash2Icon,
-  VideoIcon,
 } from "lucide-react";
+import { p } from "framer-motion/client";
 import { GhostButton, PrimaryButton } from "./Buttons";
 
 const ProjectCard = ({
@@ -38,9 +40,9 @@ const ProjectCard = ({
   return (
     <div key={gen.id} className="mb-4 break-inside-avoid">
       <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-white/20 transition group">
-        {/* Preview */}
+        {/* preview */}
         <div
-          className={`relative ${gen?.aspectRatio === "9:16" ? "aspect-9/16" : "aspect-video"}`}
+          className={`${gen?.aspectRatio === "9:16" ? "aspect-9/16" : "aspect-video"} relative overflow-hidden`}
         >
           {gen.generatedImage && (
             <img
@@ -56,34 +58,34 @@ const ProjectCard = ({
               muted
               loop
               playsInline
-              className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition duration-500"
+              className="absolute inset-0 w-full h-full object-cover opacity-0 transition duration-500 group-hover:opacity-100"
               onMouseEnter={(e) => e.currentTarget.play()}
               onMouseLeave={(e) => e.currentTarget.pause()}
             />
           )}
 
-          {/* loader */}
           {!gen?.generatedImage && !gen?.generatedVideo && (
             <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black/20">
               <Loader2Icon className="size-7 animate-spin" />
             </div>
           )}
 
-          {/* Status badges */}
+          {/* status badges */}
           <div className="absolute left-3 top-3 flex gap-2 items-center">
             {gen.isGenerating && (
-              <span className="text-xs px-2 py-1 bg-yellow-600/30 rounded-full">
+              <span className="text-xs px-2 py-1 rounded-full bg-yellow-600/80">
                 Generating
               </span>
             )}
+
             {gen.isPublished && (
-              <span className="text-xs px-2 py-1 bg-yellow-600/30 rounded-full">
+              <span className="text-xs px-2 py-1 rounded-full bg-green-600/80">
                 Published
               </span>
             )}
           </div>
 
-          {/* action menu | for my-generations only */}
+          {/* action menu for MyGenerations */}
           {!forCommunity && (
             <div
               onMouseDownCapture={() => {
@@ -95,11 +97,11 @@ const ProjectCard = ({
               className="absolute right-3 top-3 sm:opacity-0 group-hover:opacity-100 transition flex items-center gap-2"
             >
               <div className="absolute top-3 right-3">
-                <EllipsisIcon className="ml-auto bg-pink-500/60 rounded-full p-1 size-7" />
+                <EllipsisIcon className="ml-auto bg-black/10 rounded-full p-1 size-7" />
               </div>
               <div className="flex flex-col items-end w-32 text-sm">
                 <ul
-                  className={`text-xs ${menuOpen ? "block" : "hidden"} overflow-hidden right-0 peer-focus:block w-40 bg-black/50 backdrop-blur text-white border border-gray-500/50 rounded-lg shadow-md mt-2 py-1 z-10`}
+                  className={`text-xs ${menuOpen ? "block" : "hidden"} overflow-hidden right-0 peer-focus:block hover:block w-40 bg-black/50 backdrop-blur text-white border border-gray-500/50 rounded-lg shadow-md mt-2 py-1 z-10`}
                 >
                   {gen.generatedImage && (
                     <a
@@ -117,37 +119,24 @@ const ProjectCard = ({
                       download
                       className="flex gap-2 items-center px-4 py-2 hover:bg-black/10 cursor-pointer"
                     >
-                      <VideoIcon size={14} /> Download Video
+                      <PlaySquareIcon size={14} /> Download Video
                     </a>
                   )}
 
-                  <button
-                    className="w-full flex gap-2 items-center px-4 py-2 hover:bg-black/10 cursor-pointer"
-                    onClick={() => {
-                      if (navigator.share) {
-                        navigator
-                          .share({
-                            url: gen.generatedVideo || gen.generatedImage,
-                            title: gen.productName,
-                            text: gen.productDescription,
-                          })
-                          .catch((err) => {
-                            console.error("Share failed:", err);
-                          });
-                      } else {
-                        // Fallback: copy link to clipboard
-                        const url = gen.generatedVideo || gen.generatedImage;
-                        if (url) {
-                          navigator.clipboard.writeText(url);
-                          alert("Link copied to clipboard!");
-                        } else {
-                          alert("No shareable content available.");
-                        }
+                  {(gen.generatedImage || gen.generatedVideo) && (
+                    <button
+                      onClick={() =>
+                        navigator.share({
+                          url: gen.generatedVideo || gen.generatedImage,
+                          title: gen.productName,
+                          text: gen.productDescription,
+                        })
                       }
-                    }}
-                  >
-                    <Share2Icon size={14} /> Share
-                  </button>
+                      className="w-full flex gap-2 items-center px-4 py-2 hover:bg-black/10 cursor-pointer"
+                    >
+                      <Share2Icon size={14} /> Share
+                    </button>
+                  )}
 
                   <button
                     onClick={() => handleDelete(gen.id)}
@@ -171,15 +160,15 @@ const ProjectCard = ({
               src={gen.uploadedImages[1]}
               alt="model"
               className="w-16 h-16 object-cover rounded-full animate-float -ml-8"
-              style={{ animation: "float 3s infinite" }}
+              style={{ animationDelay: "3s" }}
             />
           </div>
         </div>
 
-        {/* Details */}
+        {/* details */}
         <div className="p-4">
-          {/* Product name, date, aspect ratio */}
-          <div className="flex items-center justify-between gap-4">
+          {/* product name, date, aspect ratio */}
+          <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <h3 className="font-medium text-lg mb-1">{gen.productName}</h3>
               <p className="text-sm text-gray-400">
@@ -200,7 +189,7 @@ const ProjectCard = ({
             </div>
           </div>
 
-          {/* Product description */}
+          {/* product description */}
           {gen.productDescription && (
             <div className="mt-3">
               <p className="text-xs text-gray-400 mb-1">Description</p>
@@ -213,7 +202,6 @@ const ProjectCard = ({
           {/* user prompt */}
           {gen.userPrompt && (
             <div className="mt-3">
-              <p className="text-xs text-gray-400 mb-1">Description</p>
               <div className="text-xs text-gray-300">{gen.userPrompt}</div>
             </div>
           )}
@@ -222,9 +210,9 @@ const ProjectCard = ({
           {!forCommunity && (
             <div className="mt-4 grid grid-cols-2 gap-3">
               <GhostButton
-                className="text-xs justify-center"
+                className="text-xs justify-center rounded-md"
                 onClick={() => {
-                  navigate(`/results/${gen.id}`);
+                  navigate(`/result/${gen.id}`);
                   scrollTo(0, 0);
                 }}
               >
