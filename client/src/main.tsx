@@ -16,8 +16,8 @@ createRoot(document.getElementById("root")! as HTMLElement).render(
     appearance={{
       theme: dark,
       variables: {
-        colorPrimary: "oklch(59.2% 0.249 0.584)",
-        colorTextOnPrimaryBackground: "#ffffff",
+        colorPrimary: "#e60076",
+        colorTextOnPrimaryBackground: "#fff",
       },
     }}
     publishableKey={PUBLISHABLE_KEY}
