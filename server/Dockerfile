@@ -1,22 +1,18 @@
-# Use the Node version matching your dev environment
-FROM node:22-slim
+# Use a specific Node version for consistency
+FROM node:20-alpine
 
-# Install pnpm as specified in package.json
-RUN npm install -g pnpm@10.32.1
-
+# Set working directory
 WORKDIR /app
 
-# Copy dependency files
+# Copy package files and install dependencies
 COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm && pnpm install
 
-# Install dependencies
-RUN pnpm install
-
-# Copy source code
+# Copy source code and build
 COPY . .
+RUN pnpm build
 
-# Expose the port from server file
+# Expose the port your Express app uses
 EXPOSE 5000
 
-# Start development mode as defined in your scripts
-CMD [ "pnpm", "run", "dev" ]
+CMD ["pnpm", "start"]
