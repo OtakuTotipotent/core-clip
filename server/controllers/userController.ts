@@ -30,7 +30,7 @@ export const getUserCredits = async (req: Request, res: Response) => {
 // All User Projects
 export const getAllProjects = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.auth;
+    const { userId } = req.auth();
     const projects = await prisma.project.findMany({
       where: {
         userId,
@@ -52,7 +52,7 @@ export const getAllProjects = async (req: Request, res: Response) => {
 // Specific Project
 export const getProjectById = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.auth;
+    const { userId } = req.auth();
     const { projectId } = req.params;
     const project = await prisma.project.findUnique({
       where: {
