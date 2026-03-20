@@ -30,6 +30,17 @@ export const getUserCredits = async (req: Request, res: Response) => {
 // All User Projects
 export const getAllProjects = async (req: Request, res: Response) => {
   try {
+    const { userId } = req.auth;
+    const projects = await prisma.project.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.json({ projects });
   } catch (error: any) {
     Sentry.captureException(error);
     res.status(500).json({
