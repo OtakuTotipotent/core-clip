@@ -333,6 +333,11 @@ export async function createVideo(req: Request, res: Response) {
 
 export async function getAllPublishedProjects(req: Request, res: Response) {
   try {
+    const projects = await prisma.project.findMany({
+      where: { isPublished: true },
+    });
+
+    res.json({ projects });
   } catch (error: any) {
     Sentry.captureException(error);
     res.status(500).json({
