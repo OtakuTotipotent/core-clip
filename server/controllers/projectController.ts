@@ -348,6 +348,22 @@ export async function getAllPublishedProjects(req: Request, res: Response) {
 
 export async function deleteProject(req: Request, res: Response) {
   try {
+    const { userId } = req.auth();
+    const { projectId } = req.params;
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId, userId },
+    });
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    await prisma.project.delete({
+      where: { id: projectId },
+    });
+
+    res.json({ message: "Project deleted" });
   } catch (error: any) {
     Sentry.captureException(error);
     res.status(500).json({
