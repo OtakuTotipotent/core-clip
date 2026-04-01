@@ -12,7 +12,7 @@ const Community = () => {
     setTimeout(() => {
       setProjects(dummyGenerations);
       setLoading(false);
-    }, 3000);
+    }, 2000);
   };
 
   useEffect(() => {

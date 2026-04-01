@@ -1,8 +1,24 @@
 import { PricingTable } from "@clerk/react";
 import Title from "./Title";
+import { useEffect, useState } from "react";
+import { Loader2Icon } from "lucide-react";
 
 export default function Pricing() {
-  return (
+  const [loading, setLoading] = useState(true);
+  const showLoading = async () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
+  useEffect(() => {
+    showLoading();
+  }, []);
+
+  return loading ? (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader2Icon className="size-7 animate-spin text-pink-500" />
+    </div>
+  ) : (
     <section id="pricing" className="py-20 bg-white/3 border-t border-white/6">
       <div className="max-w-6xl mx-auto px-4">
         <Title
