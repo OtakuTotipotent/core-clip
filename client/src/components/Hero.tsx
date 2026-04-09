@@ -10,21 +10,15 @@ export default function Hero() {
   ];
 
   const mainImageUrl =
-    "https://images.unsplash.com/photo-1576267423445-b2e0074d68a4?q=80&w=1600&auto=format&fit=crop";
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop";
 
   const galleryStripImages = [
-    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=100",
-    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=100",
-    "https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=100",
+    "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&auto=format&fit=crop",
   ];
 
-  const trustedLogosText = [
-    "Startups",
-    "Scale-ups",
-    "Founders",
-    "Global teams",
-    "Creative brands",
-  ];
+  const trustedLogosText = ["Adobe", "Figma", "Canva", "Shopify", "Webflow"];
 
   return (
     <>
@@ -57,8 +51,8 @@ export default function Hero() {
                     />
                   ))}
                 </div>
-                <span className="text-xs text-gray-200/90">
-                  Trusted by brands & founders worldwide
+                <span className="text-xs text-pink-200/90">
+                  Trusted by 10k+ creators
                 </span>
               </motion.a>
 
@@ -75,14 +69,14 @@ export default function Hero() {
                   delay: 0.1,
                 }}
               >
-                We design & build <br />
-                <span className="bg-clip-text text-transparent bg-linear-to-r from-indigo-300 to-indigo-400">
-                  high-impact digital experiences
+                Create videos & pictures <br />
+                <span className="bg-clip-text text-transparent bg-linear-to-r from-pink-300 to-pink-400">
+                  in seconds
                 </span>
               </motion.h1>
 
               <motion.p
-                className="text-gray-300 max-w-lg mb-8"
+                className="text-pink-300 max-w-lg mb-8"
                 initial={{ y: 60, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
@@ -94,9 +88,9 @@ export default function Hero() {
                   delay: 0.2,
                 }}
               >
-                A creative digital agency helping startups and businesses grow
-                through thoughtful design, scalable development and
-                performance-driven strategy.
+                Upload sample images & a target photo - Our AI instantly
+                produces professional imagery and short-form videos, optimized
+                for commercials, reels & personal branding.
               </motion.p>
 
               <motion.div
@@ -114,19 +108,19 @@ export default function Hero() {
               >
                 <a href="/" className="w-full sm:w-auto">
                   <PrimaryButton className="max-sm:w-full py-3 px-7">
-                    Start your project
+                    Start Generating
                     <ArrowRightIcon className="size-4" />
                   </PrimaryButton>
                 </a>
 
-                <GhostButton className="max-sm:w-full max-sm:justify-center py-3 px-5">
+                <GhostButton className="max-sm:w-full max-sm:justify-center py-3 px-5 text-pink-400">
                   <PlayIcon className="size-4" />
-                  View our work
+                  Watch Demo
                 </GhostButton>
               </motion.div>
 
               <motion.div
-                className="flex sm:inline-flex overflow-hidden items-center max-sm:justify-center text-sm text-gray-200 bg-white/10 rounded"
+                className="flex sm:inline-flex overflow-hidden items-center max-sm:justify-center text-sm text-pink-200 bg-white/10 rounded"
                 initial={{ y: 60, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
@@ -139,11 +133,11 @@ export default function Hero() {
                 }}
               >
                 <div className="flex items-center gap-2 p-2 px-3 sm:px-6.5 hover:bg-white/3 transition-colors">
-                  <ZapIcon className="size-4 text-sky-500" />
+                  <ZapIcon className="size-4 text-pink-500" />
                   <div>
-                    <div>Strategy-led execution</div>
-                    <div className="text-xs text-gray-400">
-                      Focused on growth & results
+                    <div>Seconds to create</div>
+                    <div className="text-xs text-pink-400">
+                      Optimized formats
                     </div>
                   </div>
                 </div>
@@ -151,11 +145,11 @@ export default function Hero() {
                 <div className="hidden sm:block h-6 w-px bg-white/6" />
 
                 <div className="flex items-center gap-2 p-2 px-3 sm:px-6.5 hover:bg-white/3 transition-colors">
-                  <CheckIcon className="size-4 text-cyan-500" />
+                  <CheckIcon className="size-4 text-pink-500" />
                   <div>
-                    <div>Full-service delivery</div>
-                    <div className="text-xs text-gray-400">
-                      Design, dev & marketing
+                    <div>Commercial rights</div>
+                    <div className="text-xs text-pink-400">
+                      Use anywhere, no fuss
                     </div>
                   </div>
                 </div>
@@ -184,14 +178,14 @@ export default function Hero() {
                     className="w-full h-full object-cover object-center"
                   />
 
-                  <div className="absolute left-4 top-4 px-3 py-1 rounded-full bg-black/15 backdrop-blur-sm text-xs">
-                    Branding • Web • Growth
+                  <div className="absolute left-4 top-4 px-3 py-1 rounded-full bg-pink-500 backdrop-blur-sm text-xs">
+                    Platform-Ready • 9:16 & 16:9
                   </div>
 
                   <div className="absolute right-4 bottom-4">
-                    <button className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-white/6 backdrop-blur-sm hover:bg-white/10 transition focus:outline-none">
+                    <button className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-pink-500/50 backdrop-blur-sm hover:bg-pink-500/80 transition focus:outline-none">
                       <PlayIcon className="size-4" />
-                      <span className="text-xs">See case study</span>
+                      <span className="text-xs">Preview</span>
                     </button>
                   </div>
                 </div>
@@ -221,7 +215,7 @@ export default function Hero() {
                   </motion.div>
                 ))}
                 <motion.div
-                  className="text-sm text-gray-400 ml-2 flex items-center gap-2"
+                  className="text-sm text-pink-400 ml-2 flex items-center gap-2"
                   initial={{ y: 60, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true }}
@@ -234,11 +228,11 @@ export default function Hero() {
                   }}
                 >
                   <div className="relative flex h-3.5 w-3.5 items-center justify-center">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping duration-300" />
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75 animate-ping duration-300" />
 
-                    <span className="relative inline-flex size-2 rounded-full bg-green-600" />
+                    <span className="relative inline-flex size-2 rounded-full bg-pink-600" />
                   </div>
-                  20+ completed projects
+                  + 20 more
                 </motion.div>
               </div>
             </motion.div>
@@ -260,7 +254,7 @@ export default function Hero() {
               {trustedLogosText.concat(trustedLogosText).map((logo, i) => (
                 <span
                   key={i}
-                  className="mx-6 text-sm md:text-base font-semibold text-gray-400 hover:text-gray-300 tracking-wide transition-colors"
+                  className="mx-6 text-sm md:text-base font-semibold text-pink-500 hover:text-pink-400 tracking-wide transition-colors cursor-default"
                 >
                   {logo}
                 </span>
