@@ -239,7 +239,7 @@ export const faqData = [
   {
     question: "Do I own the generated images?",
     answer:
-      "Yes - you receive full commercial rights to any images and videos generated on the platform. Use them for ads, ecommerce, social media and more.",
+      "Yes - you receive full commercial rights to any images and videos generated on the platform. Use them for ads, ecom, social media and more.",
   },
   {
     question: "Can I cancel anytime?",
