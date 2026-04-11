@@ -72,7 +72,7 @@ export default function Pricing() {
                     key={i}
                     className="flex items-center gap-3 text-sm text-pink-300"
                   >
-                    <Check className="w-4 h-4 text-indigo-400" />
+                    <Check className="w-4 h-4 text-pink-500" />
                     {feat}
                   </li>
                 ))}
