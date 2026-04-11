@@ -49,11 +49,11 @@
 }
 
 @theme {
-  --color-primary: #8b5cf6;
-  --color-primary-hover: #7c3aed;
-  --color-secondary: #ec4899;
-  --color-dark-bg: #0f172a;
-  --color-dark-card: #1e293b;
+  --color-primary: #ec4899;
+  --color-primary-hover: #b83280;
+  --color-secondary: #c10007;
+  --color-dark-bg: #1b0b13;
+  --color-dark-card: #361f2b;
 }
 
 @layer utilities {
