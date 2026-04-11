@@ -219,7 +219,7 @@ export const plansData = [
     name: "Ultra",
     price: "$99",
     desc: "Scale across teams & agencies",
-    credits: "300",
+    credits: 300,
     features: [
       "300 Credits",
       "FHD Quality",

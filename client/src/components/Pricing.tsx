@@ -12,8 +12,8 @@ export default function Pricing() {
       <div className="max-w-6xl mx-auto px-4">
         <Title
           title="Pricing"
-          heading="Simple, transparent pricing"
-          description="Flexible agency packages designed to fit startups, growing teams and established brands."
+          heading="Pricing plans suitable for you"
+          description="Our pricing plans are simple, transparent and flexible. Choose the plan that best suits your needs the best."
         />
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -45,12 +45,12 @@ export default function Pricing() {
               }}
               className={`relative p-6 rounded-xl border backdrop-blur ${
                 plan.popular
-                  ? "border-indigo-500/50 bg-indigo-900/30"
-                  : "border-white/8 bg-indigo-950/30"
+                  ? "border-pink-500/50 bg-pink-900/30"
+                  : "border-white/8 bg-pink-950/30"
               }`}
             >
               {plan.popular && (
-                <p className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-indigo-600 rounded-md text-xs">
+                <p className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-pink-600 rounded text-xs">
                   Most popular
                 </p>
               )}
@@ -63,14 +63,14 @@ export default function Pricing() {
                     / {plan.credits}
                   </span>
                 </div>
-                <p className="text-sm text-gray-300 mt-2">{plan.desc}</p>
+                <p className="text-sm text-pink-300 mt-2">{plan.desc}</p>
               </div>
 
               <ul className="space-y-3 mb-6">
                 {plan.features.map((feat, i) => (
                   <li
                     key={i}
-                    className="flex items-center gap-3 text-sm text-gray-300"
+                    className="flex items-center gap-3 text-sm text-pink-300"
                   >
                     <Check className="w-4 h-4 text-indigo-400" />
                     {feat}
@@ -80,10 +80,10 @@ export default function Pricing() {
 
               <div>
                 {plan.popular ? (
-                  <PrimaryButton className="w-full">Get started</PrimaryButton>
+                  <PrimaryButton className="w-full">Buy Now</PrimaryButton>
                 ) : (
                   <GhostButton className="w-full justify-center">
-                    Get started
+                    Buy Now
                   </GhostButton>
                 )}
               </div>
