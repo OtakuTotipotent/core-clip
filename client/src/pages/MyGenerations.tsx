@@ -53,7 +53,10 @@ const MyGenerations = () => {
             <p className="text-pink-300 mb-2">
               Start creating stunning product photos today
             </p>
-            <PrimaryButton onClick={() => (window.location.href = "/generate")}>
+            <PrimaryButton
+              onClick={() => (window.location.href = "/generate")}
+              className="text-pink-300"
+            >
               Create New Generation
             </PrimaryButton>
           </div>
