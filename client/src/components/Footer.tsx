@@ -1,4 +1,4 @@
-import { footerLinks } from "../assets/assets";
+import { assets, footerLinks } from "../assets/assets";
 import { motion } from "framer-motion";
 
 export default function Footer() {
@@ -13,11 +13,11 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-white/10">
           <div>
-            <img src="/logo.svg" alt="logo" className="h-14" />
+            <img src={assets.logo} alt="logo" className="h-14" />
             <p className="max-w-[410px] mt-6 text-sm leading-relaxed">
-              We are a digital agency focused on strategy, design and
-              development—helping brands build meaningful digital experiences
-              and grow sustainably.
+              Create beautiful imagery & short form videos. Upload images of
+              model photo - Our AI instantly produces professional lifestyle
+              images and short form videos.
             </p>
           </div>
 
@@ -48,10 +48,8 @@ export default function Footer() {
 
         <p className="py-4 text-center text-sm text-pink-500">
           © {new Date().getFullYear()}{" "}
-          <a href="#">
-            CoreClips
-          </a>
-          . All rights reserved.
+          <a href="/">CoreClips</a>.
+          All rights reserved.
         </p>
       </div>
     </motion.footer>
