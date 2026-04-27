@@ -10,7 +10,6 @@ import {
   Share2Icon,
   Trash2Icon,
 } from "lucide-react";
-import { p } from "framer-motion/client";
 import { GhostButton, PrimaryButton } from "./Buttons";
 
 const ProjectCard = ({
