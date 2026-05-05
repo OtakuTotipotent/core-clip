@@ -15,15 +15,15 @@ export default function Pricing() {
           <PricingTable
             appearance={{
               variables: {
-                colorPrimary: "#ec4899", // Tailwind pink-500 for Base button/link
-                colorBackground: "#db2777", // Tailwind pink-600 for Entire card base
-                colorText: "#000000",
+                colorBackground: "none",
+                colorForeground: "#ec4899",
               },
               elements: {
-                pricingTableCardHeader: "bg-pink-600",
-                pricingTableCardBody: "bg-pink-600",
+                pricingTableCardBody: "bg-white/8",
+                pricingTableCardHeader: "bg-white/10",
+                switchThumb: "bg-pink-500",
                 pricingTableCardFooterButton:
-                  "!bg-pink-500 !hover:bg-pink-800 text-white !py-2.5 !border-none !text-white !text-sm",
+                  "!bg-pink-500 !py-2.5 !outline-0 !border-none",
               },
             }}
           />
