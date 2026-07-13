@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050505;
+  --foreground: #fdf2f8;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, rgba(236, 72, 153, 0.2), transparent 35%), #050505;
+  background-attachment: fixed;
+  color: var(--foreground);
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
