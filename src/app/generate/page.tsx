@@ -126,10 +126,14 @@ export default function GeneratePage() {
             <select
               value={aspectRatio}
               onChange={(e) => setAspectRatio(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors appearance-none"
             >
-              <option value="9:16">9:16 (Portrait)</option>
-              <option value="16:9">16:9 (Landscape)</option>
+              <option value="9:16" className="bg-neutral-900 text-white">
+                9:16 (Portrait)
+              </option>
+              <option value="16:9" className="bg-neutral-900 text-white">
+                16:9 (Landscape)
+              </option>
             </select>
           </label>
         </div>
