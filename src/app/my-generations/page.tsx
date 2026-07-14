@@ -13,7 +13,9 @@ export default function MyGenerationsPage() {
   useEffect(() => {
     const load = async () => {
       const token = await getToken();
-      const res = await fetch("/api/user/projects", { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+      const res = await fetch("/api/user/projects", {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
       const data = await res.json();
       setProjects(data.projects || []);
     };
@@ -22,25 +24,50 @@ export default function MyGenerationsPage() {
 
   const togglePublish = async (projectId: string) => {
     const token = await getToken();
-    const res = await fetch(`/api/user/publish/${projectId}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+    const res = await fetch(`/api/user/publish/${projectId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
     const data = await res.json();
     toast.success(data.isPublished ? "Published" : "Unpublished");
-    setProjects((prev) => prev.map((project) => project.id === projectId ? { ...project, isPublished: data.isPublished } : project));
+    setProjects((prev) =>
+      prev.map((project) =>
+        project.id === projectId
+          ? { ...project, isPublished: data.isPublished }
+          : project,
+      ),
+    );
   };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-semibold text-white mb-4">My Generations</h1>
-      <p className="text-pink-300 mb-8">Track and manage your generated ads.</p>
+      <h1 className="text-3xl font-semibold text-pink-500 mb-4">
+        My Generations
+      </h1>
+      <p className="text-gray-300 mb-8">Track and manage your generated ads.</p>
       <div className="grid gap-6 md:grid-cols-3">
         {projects.map((project) => (
-          <div key={project.id} className="rounded-2xl border border-white/10 bg-black/40 p-4">
+          <div
+            key={project.id}
+            className="rounded-2xl border border-white/10 bg-black/40 p-4"
+          >
             <div className="mb-4 aspect-video rounded-xl bg-pink-950/40" />
-            <h2 className="text-lg text-white">{project.productName}</h2>
-            <p className="mt-2 text-sm text-pink-300">{project.isGenerating ? "Generating" : "Ready"}</p>
+            <h2 className="text-lg text-pink-500">{project.productName}</h2>
+            <p className="mt-2 text-sm text-gray-300">
+              {project.isGenerating ? "Generating" : "Ready"}
+            </p>
             <div className="mt-4 flex gap-3">
-              <Link href={`/result/${project.id}`} className="rounded-full bg-pink-600 px-4 py-2 text-sm text-white">Open</Link>
-              <button onClick={() => void togglePublish(project.id)} className="rounded-full border border-white/10 px-4 py-2 text-sm text-pink-200">{project.isPublished ? "Unpublish" : "Publish"}</button>
+              <Link
+                href={`/result/${project.id}`}
+                className="rounded-full bg-pink-600 px-4 py-2 text-sm text-white"
+              >
+                Open
+              </Link>
+              <button
+                onClick={() => void togglePublish(project.id)}
+                className="rounded-full border border-white/10 px-4 py-2 text-sm text-pink-200"
+              >
+                {project.isPublished ? "Unpublish" : "Publish"}
+              </button>
             </div>
           </div>
         ))}
