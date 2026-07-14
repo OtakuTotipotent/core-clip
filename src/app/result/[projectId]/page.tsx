@@ -81,17 +81,17 @@ export default function ResultPage() {
 
   if (!project)
     return (
-      <div className="max-w-6xl mx-auto px-4 py-16 text-pink-300">
+      <div className="max-w-6xl mx-auto px-4 py-16 text-pink-500">
         Loading...
       </div>
     );
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-semibold text-white mb-4">
+      <h1 className="text-3xl font-semibold text-pink-500 mb-4">
         {project.productName}
       </h1>
-      <p className="text-pink-300 mb-8">
+      <p className="text-gray-300 mb-8">
         Review your generated asset and start a video variant.
       </p>
 
@@ -122,8 +122,8 @@ export default function ResultPage() {
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-black/40 p-6 h-fit">
-          <h2 className="text-xl font-semibold text-white">Details</h2>
-          <p className="mt-3 text-sm text-pink-300">
+          <h2 className="text-xl font-semibold text-pink-500">Details</h2>
+          <p className="mt-3 text-sm text-gray-300">
             {project.productDescription || "No description provided."}
           </p>
 
