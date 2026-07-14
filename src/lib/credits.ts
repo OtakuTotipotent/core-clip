@@ -20,7 +20,7 @@ export async function ensureUserRecord(userId: string) {
         credits: CREDIT_PRICES.signup,
       },
     },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
+    { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },
   );
 
   return user;
@@ -30,7 +30,7 @@ export async function deductCredits(userId: string, amount: number) {
   const user = await User.findOneAndUpdate(
     { id: userId, credits: { $gte: amount } },
     { $inc: { credits: -amount } },
-    { new: true },
+    { returnDocument: "after" },
   );
 
   return user;
@@ -40,7 +40,7 @@ export async function refundCredits(userId: string, amount: number) {
   const user = await User.findOneAndUpdate(
     { id: userId },
     { $inc: { credits: amount } },
-    { new: true },
+    { returnDocument: "after" },
   );
 
   return user;
