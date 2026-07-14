@@ -70,10 +70,10 @@ export default function GeneratePage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-semibold text-white mb-4">
+      <h1 className="text-3xl font-semibold text-pink-500 mb-4">
         Create a new ad concept
       </h1>
-      <p className="text-pink-300 mb-8">
+      <p className="text-gray-400 mb-8">
         Upload your product and model images, and let CoreClip generate a
         polished ad shot.
       </p>
@@ -81,8 +81,8 @@ export default function GeneratePage() {
         onSubmit={handleSubmit}
         className="space-y-6 rounded-3xl border border-white/10 bg-black/40 p-8"
       >
-        <div className="grid gap-6 md:grid-cols-2">
-          <label className="text-sm text-pink-200">
+        <div className="grid gap-6 md:grid-cols-2 text-gray-300">
+          <label className="text-sm text-pink-500">
             Project name
             <input
               value={name}
@@ -90,7 +90,7 @@ export default function GeneratePage() {
               className="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
             />
           </label>
-          <label className="text-sm text-pink-200">
+          <label className="text-sm text-pink-500">
             Product name
             <input
               value={productName}
@@ -100,7 +100,7 @@ export default function GeneratePage() {
             />
           </label>
         </div>
-        <label className="block text-sm text-pink-200">
+        <label className="block text-sm text-pink-500">
           Product description (Optional)
           <textarea
             value={productDescription}
@@ -109,7 +109,7 @@ export default function GeneratePage() {
             className="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
           />
         </label>
-        <label className="block text-sm text-pink-200">
+        <label className="block text-sm text-pink-500">
           Prompt (Optional)
           <textarea
             value={userPrompt}
@@ -121,7 +121,7 @@ export default function GeneratePage() {
 
         {/* Isolated aspect ratio for better layout flow */}
         <div className="w-full md:w-1/2 md:pr-3">
-          <label className="text-sm text-pink-200">
+          <label className="text-sm text-pink-500">
             Aspect ratio
             <select
               value={aspectRatio}
@@ -140,7 +140,7 @@ export default function GeneratePage() {
 
         {/* Separated Image Upload Fields */}
         <div className="grid gap-6 md:grid-cols-2">
-          <label className="text-sm text-pink-200">
+          <label className="text-sm text-pink-500">
             Product Image
             <input
               type="file"
@@ -149,7 +149,7 @@ export default function GeneratePage() {
               className="mt-2 block w-full rounded-xl border border-dashed border-white/10 bg-white/10 px-4 py-3 text-white file:mr-4 file:rounded-full file:border-0 file:bg-pink-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-pink-700 transition-all cursor-pointer"
             />
           </label>
-          <label className="text-sm text-pink-200">
+          <label className="text-sm text-pink-500">
             Model Image
             <input
               type="file"

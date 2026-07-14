@@ -10,10 +10,10 @@ export default function Title({ title, heading, description }: TitleProps) {
       <div className="text-sm uppercase tracking-[0.35em] text-pink-500 mb-4">
         {title}
       </div>
-      <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+      <h2 className="text-3xl md:text-4xl font-semibold text-pink-500 mb-4">
         {heading}
       </h2>
-      <p className="text-pink-300 text-sm leading-relaxed">{description}</p>
+      <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
     </div>
   );
 }

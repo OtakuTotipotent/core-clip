@@ -60,19 +60,19 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      className="fixed top-5 left-0 right-0 z-50 px-4"
+      className="fixed top-2 left-0 right-0 z-50 px-2"
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       viewport={{ once: true }}
       transition={{ type: "spring", stiffness: 250, damping: 70, mass: 1 }}
     >
-      <div className="max-w-6xl mx-auto flex items-center justify-between bg-black/50 backdrop-blur-md border border-white/4 rounded-2xl p-3">
+      <div className="max-w-6xl mx-auto flex items-center justify-between bg-black/60 backdrop-blur-xl border border-white/10 rounded-full px-2 py-1 shadow-lg">
         <Link href="/" onClick={() => window.scrollTo(0, 0)}>
           <Image
             src="/logo.svg"
             alt="logo"
-            className="h-8 w-auto"
-            style={{ width: "auto", height: "auto" }}
+            className="h-12.5 w-auto"
+            style={{ width: "auto", height: "50" }}
             width={96}
             height={32}
             priority

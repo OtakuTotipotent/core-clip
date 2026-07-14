@@ -3,13 +3,13 @@ import Link from "next/link";
 
 export default function CTA() {
   return (
-    <section className="py-20">
+    <section className="pb-20">
       <div className="max-w-5xl mx-auto px-4">
-        <div className="rounded-3xl border border-pink-500/20 bg-linear-to from-pink-950/60 to-black p-10 text-center">
-          <h2 className="text-3xl font-semibold text-white mb-4">
+        <div className="rounded-3xl border border-pink-500/10 bg-linear-to-br from-pink-600/10 to-pink-800/10 p-10 text-center">
+          <h2 className="text-3xl font-semibold text-pink-500 mb-4">
             Ready to launch your next campaign?
           </h2>
-          <p className="text-pink-300 mb-8">
+          <p className="text-gray-400 mb-8">
             Create polished ad visuals and short-form videos in minutes with
             CoreClip.
           </p>

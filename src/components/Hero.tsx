@@ -25,11 +25,11 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative z-10">
-      <div className="max-w-6xl mx-auto px-4 min-h-screen max-md:w-screen max-md:overflow-hidden pt-32 md:pt-26 flex items-center justify-center">
+      <div className="max-w-6xl mx-auto px-4 w-full overflow-hidden py-10 md:py-20 flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="text-left">
             <motion.a
-              href="https://prebuiltui.com/tailwind-templates?ref=pixel-forge"
+              href="/community"
               className="inline-flex items-center gap-3 pl-3 pr-4 py-1.5 rounded-full bg-white/10 mb-6 justify-start"
               initial={{ y: 60, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
@@ -53,7 +53,7 @@ export default function Hero() {
                   />
                 ))}
               </div>
-              <span className="text-xs text-pink-200/90">
+              <span className="text-xs text-pink-500">
                 Trusted by 10k+ creators
               </span>
             </motion.a>
@@ -72,13 +72,13 @@ export default function Hero() {
               }}
             >
               Create videos & pictures <br />
-              <span className="bg-clip-text text-transparent bg-linear-to-r from-pink-300 to-pink-400">
+              <span className="bg-clip-text text-transparent bg-linear-to-r from-pink-300 to-pink-500">
                 in seconds
               </span>
             </motion.h1>
 
             <motion.p
-              className="text-pink-300 max-w-lg mb-8"
+              className="text-gray-300 max-w-lg mb-8"
               initial={{ y: 60, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
@@ -111,7 +111,7 @@ export default function Hero() {
               <PrimaryButton
                 type="button"
                 onClick={() => router.push("/generate")}
-                className="w-full sm:w-auto py-3 px-7"
+                className="w-full sm:w-auto py-3 px-5"
               >
                 Start Generating
                 <ArrowRightIcon className="size-4" />
@@ -120,7 +120,7 @@ export default function Hero() {
               <GhostButton
                 type="button"
                 onClick={() => router.push("/community")}
-                className="max-sm:w-full max-sm:justify-center py-3 px-5 text-pink-400"
+                className="max-sm:w-full max-sm:justify-center py-3 px-5 text-pink-500"
               >
                 <PlayIcon className="size-4" />
                 Watch Demo
@@ -128,7 +128,7 @@ export default function Hero() {
             </motion.div>
 
             <motion.div
-              className="flex sm:inline-flex overflow-hidden items-center max-sm:justify-center text-sm text-pink-200 bg-white/10 rounded"
+              className="flex sm:inline-flex overflow-hidden items-center max-sm:justify-center text-sm text-pink-500 bg-pink-500/10 rounded-lg cursor-default"
               initial={{ y: 60, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
@@ -144,7 +144,7 @@ export default function Hero() {
                 <ZapIcon className="size-4 text-pink-500" />
                 <div>
                   <div>Seconds to create</div>
-                  <div className="text-xs text-pink-400">Optimized formats</div>
+                  <div className="text-xs text-gray-400">Optimized formats</div>
                 </div>
               </div>
 
@@ -154,7 +154,7 @@ export default function Hero() {
                 <CheckIcon className="size-4 text-pink-500" />
                 <div>
                   <div>Commercial rights</div>
-                  <div className="text-xs text-pink-400">
+                  <div className="text-xs text-gray-400">
                     Use anywhere, no fuss
                   </div>
                 </div>

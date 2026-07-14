@@ -38,14 +38,16 @@ export default function Pricing() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-3xl border p-8 ${plan.popular ? "border-pink-500 bg-pink-950/30" : "border-white/10 bg-black/30"}`}
+              className={`rounded-3xl border p-8 ${plan.popular ? "border-pink-500 bg-pink-950/30" : "border-white/10 bg-black/30"} hover:opacity-80 cursor-default`}
             >
-              <h3 className="text-xl font-semibold text-white">{plan.name}</h3>
-              <p className="mt-3 text-pink-300">{plan.description}</p>
-              <div className="mt-6 text-4xl font-semibold text-white">
+              <h3 className="text-xl font-semibold text-pink-500">
+                {plan.name}
+              </h3>
+              <p className="mt-3 text-gray-300">{plan.description}</p>
+              <div className="mt-6 text-4xl font-semibold text-pink-500">
                 {plan.price}
               </div>
-              <p className="mt-2 text-sm text-pink-400">
+              <p className="mt-2 text-sm text-gray-400">
                 {plan.credits} monthly credits
               </p>
               <button className="mt-8 w-full rounded-full bg-pink-600 px-4 py-2 text-white">

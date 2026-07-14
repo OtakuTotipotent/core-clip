@@ -40,13 +40,13 @@ export default function Faq() {
                   card.classList.add("transition", "duration-300");
                 }
               }}
-              className="group bg-white/6 rounded-xl select-none"
+              className="group bg-pink-900/20 rounded-xl select-none"
             >
               <summary className="flex items-center justify-between p-4 cursor-pointer">
                 <h4 className="font-medium text-pink-500">{faq.question}</h4>
                 <ChevronDownIcon className="w-5 h-5 text-pink-500 group-open:rotate-180 transition-transform" />
               </summary>
-              <p className="p-4 pt-0 text-sm text-pink-300 leading-relaxed">
+              <p className="p-4 pt-0 text-sm text-gray-400 leading-relaxed">
                 {faq.answer}
               </p>
             </motion.details>

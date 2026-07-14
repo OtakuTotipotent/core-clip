@@ -36,15 +36,10 @@ export default function Features() {
               onAnimationComplete={() => {
                 const card = refs.current[i];
                 if (card) {
-                  card.classList.add(
-                    "transition",
-                    "duration-300",
-                    "hover:border-white/15",
-                    "hover:-translate-y-1",
-                  );
+                  card.classList.add("transition", "duration-300");
                 }
               }}
-              className="rounded-2xl p-6 bg-white/3 border border-white/6"
+              className="rounded-2xl p-6 bg-pink-900/20 border border-pink-500/20 hover:bg-pink-900/10 transition-colors"
             >
               <div className="w-12 h-12 rounded-lg bg-pink-900/20 text-pink-500 flex items-center justify-center mb-4">
                 {feature.icon}
@@ -52,7 +47,7 @@ export default function Features() {
               <h3 className="text-lg font-semibold text-pink-500 mb-2">
                 {feature.title}
               </h3>
-              <p className="text-pink-300 text-sm leading-relaxed">
+              <p className="text-gray-400 text-sm leading-relaxed">
                 {feature.desc}
               </p>
             </motion.div>
