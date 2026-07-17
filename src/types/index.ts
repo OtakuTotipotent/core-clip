@@ -15,11 +15,10 @@ export interface ProjectRecord {
   productName: string;
   productDescription?: string;
   userPrompt?: string;
-  aspectRatio?: string;
-  targetLength?: number;
+  aspectRatio: "9:16" | "16:9" | "1:1";
   uploadedImages?: string[];
-  generatedImage?: string;
-  generatedVideo?: string;
+  generatedImageA?: string;
+  generatedImageB?: string;
   isGenerating?: boolean;
   isPublished?: boolean;
   error?: string;
