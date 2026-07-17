@@ -7,11 +7,15 @@ const ProjectSchema = new Schema(
     productName: { type: String, required: true },
     productDescription: { type: String },
     userPrompt: { type: String },
-    aspectRatio: { type: String, enum: ["9:16", "16:9", "1:1"], default: "9:16" },
+    aspectRatio: {
+      type: String,
+      enum: ["9:16", "16:9", "1:1"],
+      default: "9:16",
+    },
     targetLength: { type: Number, default: 5 },
     uploadedImages: [{ type: String }],
-    generatedImage: { type: String },
-    generatedVideo: { type: String },
+    generatedImageA: { type: String },
+    generatedImageB: { type: String },
     isGenerating: { type: Boolean, default: false, index: true },
     isPublished: { type: Boolean, default: false, index: true },
     error: { type: String },
@@ -19,4 +23,5 @@ const ProjectSchema = new Schema(
   { timestamps: true },
 );
 
-export const Project = mongoose.models.Project || mongoose.model("Project", ProjectSchema);
+export const Project =
+  mongoose.models.Project || mongoose.model("Project", ProjectSchema);

@@ -11,5 +11,10 @@ export async function GET() {
 
   await connectToDatabase();
   const projects = await Project.find({ userId }).sort({ createdAt: -1 });
-  return NextResponse.json({ projects: projects.map((project) => ({ ...project.toObject(), id: String(project._id) })) });
+  return NextResponse.json({
+    projects: projects.map((project) => ({
+      ...project.toObject(),
+      id: String(project._id),
+    })),
+  });
 }

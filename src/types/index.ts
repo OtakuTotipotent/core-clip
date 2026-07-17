@@ -18,8 +18,8 @@ export interface ProjectRecord {
   aspectRatio?: string;
   targetLength?: number;
   uploadedImages?: string[];
-  generatedImage?: string;
-  generatedVideo?: string;
+  generatedImageA?: string;
+  generatedImageB?: string;
   isGenerating?: boolean;
   isPublished?: boolean;
   error?: string;

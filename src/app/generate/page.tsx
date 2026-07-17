@@ -62,7 +62,7 @@ export default function GeneratePage() {
 
       toast.success("Image generation started");
       router.push(`/result/${data.projectId}`);
-    } catch (error) {
+    } catch {
       toast.error("An unexpected error occurred.");
       setLoading(false);
     }
@@ -165,7 +165,7 @@ export default function GeneratePage() {
           disabled={loading}
           className="rounded-full bg-pink-600 px-6 py-3 font-medium text-white disabled:opacity-60 hover:bg-pink-700 transition-colors w-full md:w-auto"
         >
-          {loading ? "Generating Concept..." : "Generate Ad Concept"}
+          {loading ? "Generating Ad..." : "Generate Ad"}
         </button>
       </form>
     </div>

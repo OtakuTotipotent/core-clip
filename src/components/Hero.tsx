@@ -71,9 +71,9 @@ export default function Hero() {
                 delay: 0.1,
               }}
             >
-              Create videos & pictures <br />
-              <span className="bg-clip-text text-transparent bg-linear-to-r from-pink-300 to-pink-500">
-                in seconds
+              Create professional & commercial <br />
+              <span className="bg-clip-text text-transparent bg-linear-to-r from-pink-200 to-pink-500">
+                ads in seconds
               </span>
             </motion.h1>
 
@@ -91,7 +91,7 @@ export default function Hero() {
               }}
             >
               Upload sample images & a target photo - Our AI instantly produces
-              professional imagery and short-form videos, optimized for
+              professional imagery optimized for
               commercials, reels & personal branding.
             </motion.p>
 
