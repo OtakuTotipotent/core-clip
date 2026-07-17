@@ -1,4 +1,3 @@
-// src/app/generate/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -16,18 +15,17 @@ export default function GeneratePage() {
   const [userPrompt, setUserPrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("9:16");
 
-  // Replaced generic FileList with discrete file states
   const [productImage, setProductImage] = useState<File | null>(null);
   const [modelImage, setModelImage] = useState<File | null>(null);
-
   const [loading, setLoading] = useState(false);
 
-  // Replaced deprecated FormEvent with SyntheticEvent
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!productImage || !modelImage) {
-      toast.error("Please upload both a product image and a model image.");
+      toast.error(
+        "Please upload both a product image and a model styling asset.",
+      );
       return;
     }
 
@@ -40,8 +38,6 @@ export default function GeneratePage() {
     formData.append("productDescription", productDescription);
     formData.append("userPrompt", userPrompt);
     formData.append("aspectRatio", aspectRatio);
-
-    // Appending both discrete files to the same 'images' key to prevent breaking the backend
     formData.append("images", productImage);
     formData.append("images", modelImage);
 
@@ -60,10 +56,10 @@ export default function GeneratePage() {
         return;
       }
 
-      toast.success("Image generation started");
+      toast.success("Ad pipeline started successfully");
       router.push(`/result/${data.projectId}`);
     } catch {
-      toast.error("An unexpected error occurred.");
+      toast.error("An unexpected engine error occurred.");
       setLoading(false);
     }
   }
@@ -75,98 +71,120 @@ export default function GeneratePage() {
       </h1>
       <p className="text-gray-400 mb-8">
         Upload your product and model images, and let CoreClip generate a
-        polished ad shot.
+        polished commercial ad shot.
       </p>
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-3xl border border-white/10 bg-black/40 p-8"
+        className="space-y-6 rounded-3xl border border-white/10 bg-black/40 p-8 shadow-xl backdrop-blur-md"
       >
         <div className="grid gap-6 md:grid-cols-2 text-gray-300">
-          <label className="text-sm text-pink-500">
+          <label className="text-sm font-medium text-pink-500">
             Project name
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
             />
           </label>
-          <label className="text-sm text-pink-500">
-            Product name
+          <label className="text-sm font-medium text-pink-500">
+            Product name *
             <input
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
               required
-              className="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
             />
           </label>
         </div>
-        <label className="block text-sm text-pink-500">
+
+        <label className="block text-sm font-medium text-pink-500">
           Product description (Optional)
           <textarea
             value={productDescription}
             onChange={(e) => setProductDescription(e.target.value)}
-            rows={3}
-            className="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
-          />
-        </label>
-        <label className="block text-sm text-pink-500">
-          Prompt (Optional)
-          <textarea
-            value={userPrompt}
-            onChange={(e) => setUserPrompt(e.target.value)}
-            rows={3}
-            className="mt-2 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors"
+            rows={2}
+            placeholder="E.g., Matte black wireless headphones with sleek metallic trim"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors placeholder:text-gray-600"
           />
         </label>
 
-        {/* Isolated aspect ratio for better layout flow */}
-        <div className="w-full md:w-1/2 md:pr-3">
-          <label className="text-sm text-pink-500">
+        <label className="block text-sm font-medium text-pink-500">
+          Model & Background Prompt (Optional)
+          <textarea
+            value={userPrompt}
+            onChange={(e) => setUserPrompt(e.target.value)}
+            rows={2}
+            placeholder="E.g., Cyberpunk background, futuristic neon billboard lights, professional modeling shoot"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors placeholder:text-gray-600"
+          />
+        </label>
+
+        <div className="w-full md:w-1/2">
+          <label className="text-sm font-medium text-pink-500">
             Aspect ratio
             <select
               value={aspectRatio}
               onChange={(e) => setAspectRatio(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-white/10 bg-[#1a1a1a] px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors appearance-none"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[#141414] px-4 py-3 text-white focus:border-pink-500 focus:outline-none transition-colors appearance-none"
             >
-              <option value="9:16" className="bg-neutral-900 text-white">
-                9:16 (Portrait)
-              </option>
-              <option value="16:9" className="bg-neutral-900 text-white">
-                16:9 (Landscape)
-              </option>
+              <option value="9:16">9:16 (Vertical Story / Reel)</option>
+              <option value="16:9">16:9 (Horizontal Wide)</option>
+              <option value="1:1">1:1 (Square Feed Post)</option>
             </select>
           </label>
         </div>
 
-        {/* Separated Image Upload Fields */}
         <div className="grid gap-6 md:grid-cols-2">
-          <label className="text-sm text-pink-500">
-            Product Image
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setProductImage(e.target.files?.[0] || null)}
-              className="mt-2 block w-full rounded-xl border border-dashed border-white/10 bg-white/10 px-4 py-3 text-white file:mr-4 file:rounded-full file:border-0 file:bg-pink-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-pink-700 transition-all cursor-pointer"
-            />
-          </label>
-          <label className="text-sm text-pink-500">
-            Model Image
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setModelImage(e.target.files?.[0] || null)}
-              className="mt-2 block w-full rounded-xl border border-dashed border-white/10 bg-white/10 px-4 py-3 text-white file:mr-4 file:rounded-full file:border-0 file:bg-pink-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-pink-700 transition-all cursor-pointer"
-            />
-          </label>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-pink-500 mb-2">
+              Product Image *
+            </span>
+            <div className="relative rounded-xl border border-dashed border-white/20 bg-white/5 p-4 text-center hover:border-pink-500 transition-colors">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setProductImage(e.target.files?.[0] || null)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <p className="text-sm text-gray-400">
+                {productImage
+                  ? `Selected: ${productImage.name}`
+                  : "Click or drag to upload product asset"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-pink-500 mb-2">
+              Model / Style Environment *
+            </span>
+            <div className="relative rounded-xl border border-dashed border-white/20 bg-white/5 p-4 text-center hover:border-pink-500 transition-colors">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setModelImage(e.target.files?.[0] || null)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <p className="text-sm text-gray-400">
+                {modelImage
+                  ? `Selected: ${modelImage.name}`
+                  : "Click or drag to upload model reference"}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-full bg-pink-600 px-6 py-3 font-medium text-white disabled:opacity-60 hover:bg-pink-700 transition-colors w-full md:w-auto"
-        >
-          {loading ? "Generating Ad..." : "Generate Ad"}
-        </button>
+        <div className="pt-4">
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded-full bg-pink-600 px-8 py-3.5 font-semibold text-white disabled:opacity-50 hover:bg-pink-700 transition-colors w-full md:w-auto shadow-lg shadow-pink-600/20 cursor-pointer"
+          >
+            {loading
+              ? "Processing Ad Assets (5 Credits)..."
+              : "Generate Commercial Ad (5 Credits)"}
+          </button>
+        </div>
       </form>
     </div>
   );
