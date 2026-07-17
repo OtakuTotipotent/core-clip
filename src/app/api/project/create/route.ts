@@ -9,85 +9,133 @@ import {
 } from "@/lib/credits";
 import { Project } from "@/models/Project";
 import { v2 as cloudinary } from "cloudinary";
-import { GoogleGenAI } from "@google/genai";
 
-// Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Initialize the modern Gemini SDK client
-const ai = new GoogleGenAI({});
+// --- Keyless AI Image Generator with Retries ---
+async function generateAdConcept(
+  promptText: string,
+  width = 1024,
+  height = 1024,
+  retries = 3, // Add retry parameter
+): Promise<string> {
+  const sanitizedPrompt = promptText.replace(/https?:\/\/[^\s]+/g, "").trim();
+  const encodedPrompt = encodeURIComponent(sanitizedPrompt);
+  const randomSeed = Math.floor(Math.random() * 100000);
 
-// Detached background task for AI Image Generation
-async function generateImageTask(
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    try {
+      const response = await fetch(
+        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true&seed=${randomSeed}`,
+        { signal: controller.signal },
+      );
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const base64 = Buffer.from(arrayBuffer).toString("base64");
+
+      const uploadResult = await cloudinary.uploader.upload(
+        `data:image/jpeg;base64,${base64}`,
+        {
+          resource_type: "image",
+          folder: "coreclip_ads",
+        },
+      );
+
+      return uploadResult.secure_url;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      console.warn(`Attempt ${attempt} failed for ad concept. Error:`, error);
+
+      if (attempt === retries) {
+        throw new Error(
+          "Image generation engine failed after maximum retries.",
+        );
+      }
+
+      // Wait for 2 seconds before retrying to let the server breathe
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
+  }
+
+  throw new Error("Unexpected generation failure.");
+}
+
+// --- Detached Background Task Orchestrator ---
+async function generateDualConceptsTask(
   projectId: string,
   userId: string,
-  promptText: string,
-  image1: { base64: string; mimeType: string },
-  image2: { base64: string; mimeType: string },
+  productName: string,
+  productDesc: string,
+  userPrompt: string,
+  aspectRatio: string,
 ) {
   try {
-    // 1. Call Gemini Interactions API
-    const interaction = await ai.interactions.create({
-      model: "gemini-3.1-flash-image",
-      input: [
-        {
-          type: "text",
-          text: promptText,
-        },
-        {
-          type: "image",
-          data: image1.base64,
-          mime_type: image1.mimeType,
-        },
-        {
-          type: "image",
-          data: image2.base64,
-          mime_type: image2.mimeType,
-        },
-      ],
-    });
+    const width =
+      aspectRatio === "16:9" ? 1280 : aspectRatio === "1:1" ? 1024 : 768;
+    const height =
+      aspectRatio === "16:9" ? 720 : aspectRatio === "1:1" ? 1024 : 1365;
 
-    const generatedImage = interaction.output_image;
-    if (!generatedImage || !generatedImage.data) {
+    // Notice we are NOT passing the raw image URLs into the text prompt anymore.
+    const baseContext = `Product: ${productName}. ${productDesc}. ${userPrompt}.`;
+
+    const promptA = `Professional advertising photography. High-end studio lighting, dramatic shadows, sharp focus, 8k resolution, commercial magazine ad style. ${baseContext} Include stylish typography layout space.`;
+    const promptB = `Cinematic lifestyle photography. Natural lighting, candid, award-winning commercial campaign, depth of field, highly detailed fashion editorial style. ${baseContext}`;
+
+    const [resultA, resultB] = await Promise.allSettled([
+      generateAdConcept(promptA, width, height),
+      generateAdConcept(promptB, width, height),
+    ]);
+
+    const updatePayload: {
+      isGenerating: boolean;
+      generatedImageA?: string;
+      generatedImageB?: string;
+    } = { isGenerating: false };
+
+    if (resultA.status === "fulfilled")
+      updatePayload.generatedImageA = resultA.value;
+    else console.error("Concept A failed:", resultA.reason);
+
+    if (resultB.status === "fulfilled")
+      updatePayload.generatedImageB = resultB.value;
+    else console.error("Concept B failed:", resultB.reason);
+
+    if (resultA.status === "rejected" && resultB.status === "rejected") {
       throw new Error(
-        "Failed to receive valid generated image data from Gemini model workflow.",
+        "Both AI generation engines failed to produce an ad concept.",
       );
     }
 
-    // 2. Upload generated output to Cloudinary
-    const generatedImageDataUri = `data:${generatedImage.mime_type || "image/png"};base64,${generatedImage.data}`;
-    const uploadResult = await cloudinary.uploader.upload(
-      generatedImageDataUri,
-      { resource_type: "image" },
-    );
-
-    // 3. Mark project generation complete and link final url
     await connectToDatabase();
-    await Project.findByIdAndUpdate(projectId, {
-      generatedImage: uploadResult.secure_url,
-      isGenerating: false,
-      error: undefined,
-    });
+    await Project.findByIdAndUpdate(projectId, updatePayload);
   } catch (error) {
+    console.error("Generation Pipeline Error:", error);
     await connectToDatabase();
     await Project.findByIdAndUpdate(projectId, {
       isGenerating: false,
       error: (error as Error).message,
     });
-    // Refund credits if generation fails
     await refundCredits(userId, CREDIT_PRICES.image);
   }
 }
 
 export async function POST(request: NextRequest) {
   const { userId } = await auth();
-  if (!userId) {
+  if (!userId)
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
 
   await connectToDatabase();
   const user = await ensureUserRecord(userId);
@@ -100,12 +148,12 @@ export async function POST(request: NextRequest) {
 
   const formData = await request.formData();
   const images = formData.getAll("images");
-  const productName = formData.get("productName")?.toString() || "New Project";
+  const productName = formData.get("productName")?.toString() || "New Product";
   const productDescription =
     formData.get("productDescription")?.toString() || "";
   const userPrompt = formData.get("userPrompt")?.toString() || "";
   const aspectRatio = formData.get("aspectRatio")?.toString() || "9:16";
-  const name = formData.get("name")?.toString() || "New Project";
+  const name = formData.get("name")?.toString() || "Ad Campaign";
 
   if (images.length < 2) {
     return NextResponse.json(
@@ -115,15 +163,13 @@ export async function POST(request: NextRequest) {
   }
 
   const deducted = await deductCredits(userId, CREDIT_PRICES.image);
-  if (!deducted) {
+  if (!deducted)
     return NextResponse.json(
       { message: "Insufficient credits" },
       { status: 402 },
     );
-  }
 
   try {
-    // Process input images to Base64 buffers concurrently to save execution time
     const file1 = images[0] as File;
     const file2 = images[1] as File;
 
@@ -135,7 +181,6 @@ export async function POST(request: NextRequest) {
     const base64_1 = Buffer.from(buffer1).toString("base64");
     const base64_2 = Buffer.from(buffer2).toString("base64");
 
-    // Upload user images to Cloudinary concurrently
     const [upload1, upload2] = await Promise.all([
       cloudinary.uploader.upload(`data:${file1.type};base64,${base64_1}`, {
         resource_type: "image",
@@ -145,9 +190,6 @@ export async function POST(request: NextRequest) {
       }),
     ]);
 
-    const uploadedImages = [upload1.secure_url, upload2.secure_url];
-
-    // Create the project in MongoDB tracking generation state
     const project = await Project.create({
       userId,
       name,
@@ -155,27 +197,26 @@ export async function POST(request: NextRequest) {
       productDescription,
       userPrompt,
       aspectRatio,
-      uploadedImages,
+      uploadedImages: [upload1.secure_url, upload2.secure_url],
       isGenerating: true,
     });
 
     const projectId = String(project._id);
-    const promptText = `Combine the product and model into a realistic commercial ad. Aspect ratio should match ${aspectRatio}. ${productDescription}\n${userPrompt}`;
 
-    // Fire and forget the background task
-    void generateImageTask(
+    // Fire task without injecting the URLs directly into the text propmt
+    void generateDualConceptsTask(
       projectId,
       userId,
-      promptText,
-      { base64: base64_1, mimeType: file1.type },
-      { base64: base64_2, mimeType: file2.type },
+      productName,
+      productDescription,
+      userPrompt,
+      aspectRatio,
     );
 
-    // Return immediately to unblock the frontend UI
     return NextResponse.json(
       {
         projectId,
-        message: "Image generation started",
+        message: "Dual-engine ad generation started",
         status: "processing",
       },
       { status: 202 },

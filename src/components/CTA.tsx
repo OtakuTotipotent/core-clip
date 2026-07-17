@@ -10,8 +10,7 @@ export default function CTA() {
             Ready to launch your next campaign?
           </h2>
           <p className="text-gray-400 mb-8">
-            Create polished ad visuals and short-form videos in minutes with
-            CoreClip.
+            Create polished visuals and high resolution images with CoreClip.
           </p>
           <Link href="/generate">
             <PrimaryButton>Start Creating</PrimaryButton>

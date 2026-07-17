@@ -2,7 +2,6 @@ import { User } from "@/models/User";
 
 export const CREDIT_PRICES = {
   image: 5,
-  video: 10,
   signup: 20,
   pro: 80,
   premium: 240,

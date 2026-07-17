@@ -13,8 +13,8 @@ export const featuresData = [
   },
   {
     icon: <VideoIcon className="w-6 h-6" />,
-    title: "Video Synthesis",
-    desc: "Bring product shots to life with short-form, social-ready videos.",
+    title: "Image Synthesis",
+    desc: "Bring product shots to life with short-form, social-ready images.",
   },
 ];
 
@@ -27,7 +27,7 @@ export const faqData = [
   {
     question: "Do I own the generated images?",
     answer:
-      "Yes - you receive full commercial rights to any images and videos generated on the platform. Use them for ads, ecom, social media and more.",
+      "Yes - you receive full commercial rights to any images generated on the platform. Use them for ads, ecom, social media and more.",
   },
   {
     question: "Can I cancel anytime?",
@@ -37,7 +37,7 @@ export const faqData = [
   {
     question: "What input formats do you support?",
     answer:
-      "We accept JPG, PNG, and WEBP. Outputs are high resolution PNGs and MP4s optimized for social platforms.",
+      "We accept JPG, PNG, and WEBP. Outputs are high resolution PNGs optimized for social platforms.",
   },
 ];
 

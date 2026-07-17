@@ -1,4 +1,3 @@
-// CoreClip/src/app/result/[projectId]/page.tsx
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -6,6 +5,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
+import { DownloadIcon, GlobeIcon, LockIcon } from "lucide-react";
 import type { ProjectRecord } from "@/types";
 
 export default function ResultPage() {
@@ -22,12 +22,10 @@ export default function ResultPage() {
     return data.project || null;
   }, [getToken, params.projectId]);
 
-  // Initial load
   useEffect(() => {
     fetchProject().then(setProject);
   }, [fetchProject]);
 
-  // Polling mechanism
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
@@ -40,11 +38,11 @@ export default function ResultPage() {
           if (updatedProject.error) {
             toast.error(`Generation failed: ${updatedProject.error}`);
           } else {
-            toast.success("Generation complete!");
+            toast.success("Ad concepts generated successfully!");
           }
           clearInterval(interval);
         }
-      }, 4000); // Poll every 4 seconds
+      }, 4000);
     }
 
     return () => {
@@ -52,92 +50,156 @@ export default function ResultPage() {
     };
   }, [project?.isGenerating, fetchProject]);
 
-  const generateVideo = async () => {
-    const token = await getToken();
-
-    // Optimistically update UI to prevent double-clicking
-    setProject((prev) => (prev ? { ...prev, isGenerating: true } : null));
-
-    const res = await fetch("/api/project/video", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: JSON.stringify({ projectId: params.projectId }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      toast.error(data.message || "Video generation failed");
-      // Revert optimistic update on failure
-      setProject((prev) => (prev ? { ...prev, isGenerating: false } : null));
-      return;
+  // Download handler forces browser download via Blob
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+      toast.success("Download started");
+    } catch {
+      toast.error("Failed to download image");
     }
-
-    toast.success("Video generation started. This may take a few minutes.");
   };
 
-  if (!project)
+  // Toggle Publish to Community
+  const togglePublish = async () => {
+    try {
+      const token = await getToken();
+      const res = await fetch(`/api/user/publish/${params.projectId}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+
+      setProject((prev) =>
+        prev ? { ...prev, isPublished: data.isPublished } : null,
+      );
+      toast.success(
+        data.isPublished ? "Published to Community!" : "Removed from Community",
+      );
+    } catch {
+      toast.error("Failed to update visibility");
+    }
+  };
+
+  if (!project) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-16 text-pink-500">
         Loading...
       </div>
     );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-semibold text-pink-500 mb-4">
-        {project.productName}
-      </h1>
-      <p className="text-gray-300 mb-8">
-        Review your generated asset and start a video variant.
-      </p>
-
-      <div className="grid gap-8 md:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-3xl border border-white/10 bg-black/40 p-6 flex flex-col gap-4">
-          {/* Display Generated Video if available, otherwise show Image */}
-          {project.generatedVideo ? (
-            <video
-              src={project.generatedVideo}
-              controls
-              autoPlay
-              loop
-              className="w-full rounded-2xl"
-            />
-          ) : project.generatedImage ? (
-            <Image
-              src={project.generatedImage}
-              alt={project.productName}
-              width={800}
-              height={500}
-              className="w-full rounded-2xl"
-            />
-          ) : (
-            <div className="aspect-video rounded-2xl bg-pink-950/40 flex items-center justify-center">
-              <span className="text-pink-500">No media available</span>
-            </div>
-          )}
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold text-pink-500 mb-2">
+            {project.productName}
+          </h1>
+          <p className="text-gray-300">
+            {project.productDescription ||
+              "Review your AI-generated ad concepts."}
+          </p>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-black/40 p-6 h-fit">
-          <h2 className="text-xl font-semibold text-pink-500">Details</h2>
-          <p className="mt-3 text-sm text-gray-300">
-            {project.productDescription || "No description provided."}
-          </p>
-
+        <div className="flex items-center gap-3">
           <button
-            onClick={() => void generateVideo()}
-            disabled={project.isGenerating || !!project.generatedVideo}
-            className="mt-6 w-full rounded-full bg-pink-600 px-6 py-3 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            onClick={togglePublish}
+            disabled={project.isGenerating}
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-pink-300 transition-colors disabled:opacity-50"
           >
-            {project.isGenerating
-              ? "Generating..."
-              : project.generatedVideo
-                ? "Video Created"
-                : "Generate video (10 credits)"}
+            {project.isPublished ? (
+              <GlobeIcon size={16} />
+            ) : (
+              <LockIcon size={16} />
+            )}
+            {project.isPublished ? "Public" : "Private"}
           </button>
+          <div className="text-sm px-4 py-2 bg-white/10 rounded-full text-pink-500">
+            Status:{" "}
+            {project.isGenerating ? "Generating Concepts..." : "Complete"}
+          </div>
+        </div>
+      </div>
+
+      {/* Grid Layout Fix: Align items to start so they don't stretch vertically */}
+      <div className="grid gap-8 md:grid-cols-2 items-start">
+        {/* Concept A */}
+        <div className="rounded-3xl border border-white/10 bg-black/40 p-6 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-pink-500">Concept A</h2>
+            {project.generatedImageA && (
+              <button
+                onClick={() =>
+                  handleDownload(
+                    project.generatedImageA!,
+                    `${project.productName}-A.jpg`,
+                  )
+                }
+                className="text-pink-300 hover:text-white transition-colors p-2"
+                title="Download Concept A"
+              >
+                <DownloadIcon size={20} />
+              </button>
+            )}
+          </div>
+
+          <div className="relative w-full rounded-2xl overflow-hidden border border-white/5 bg-black/60 flex items-center justify-center min-h-100">
+            {project.generatedImageA ? (
+              <Image
+                src={project.generatedImageA}
+                alt={`${project.productName} Concept A`}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            ) : (
+              <span className="text-pink-500 animate-pulse">Processing...</span>
+            )}
+          </div>
+        </div>
+
+        {/* Concept B */}
+        <div className="rounded-3xl border border-white/10 bg-black/40 p-6 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-pink-500">Concept B</h2>
+            {project.generatedImageB && (
+              <button
+                onClick={() =>
+                  handleDownload(
+                    project.generatedImageB!,
+                    `${project.productName}-B.jpg`,
+                  )
+                }
+                className="text-pink-300 hover:text-white transition-colors p-2"
+                title="Download Concept B"
+              >
+                <DownloadIcon size={20} />
+              </button>
+            )}
+          </div>
+
+          <div className="relative w-full rounded-2xl overflow-hidden border border-white/5 bg-black/60 flex items-center justify-center min-h-100">
+            {project.generatedImageB ? (
+              <Image
+                src={project.generatedImageB}
+                alt={`${project.productName} Concept B`}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            ) : (
+              <span className="text-pink-500 animate-pulse">Processing...</span>
+            )}
+          </div>
         </div>
       </div>
     </div>

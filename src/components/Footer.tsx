@@ -30,9 +30,9 @@ export default function Footer() {
               priority
             />
             <p className="max-w-102.5 mt-6 text-sm leading-relaxed">
-              Create beautiful imagery & short form videos. Upload images of
-              model photo - Our AI instantly produces professional lifestyle
-              images and short form videos.
+              Create beautiful imagery & targeted ads. Upload images of model &
+              product photos - Our AI instantly produces professional lifestyle
+              imagery.
             </p>
           </div>
 
