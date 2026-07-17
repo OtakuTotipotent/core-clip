@@ -12,40 +12,69 @@ export async function POST(req: NextRequest) {
   const svix_signature = headerPayload.get("svix-signature");
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return NextResponse.json({ message: "Missing Svix headers" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Missing Svix headers" },
+      { status: 400 },
+    );
   }
 
   const body = await req.text();
   const wh = new Webhook(process.env.CLERK_WEBHOOK_SIGNING_SECRET || "");
-  let evt: { type: string; data: Record<string, unknown> };
+  let evt: { type: string; data: Record<string, any> };
   try {
-    evt = wh.verify(body, { "svix-id": svix_id, "svix-timestamp": svix_timestamp, "svix-signature": svix_signature }) as { type: string; data: Record<string, unknown> };
+    evt = wh.verify(body, {
+      "svix-id": svix_id,
+      "svix-timestamp": svix_timestamp,
+      "svix-signature": svix_signature,
+    }) as { type: string; data: Record<string, any> };
   } catch {
     return NextResponse.json({ message: "Invalid signature" }, { status: 400 });
   }
 
   await connectToDatabase();
   const { type, data } = evt;
+
   if (type === "user.created" || type === "user.updated") {
+    // Separate fields: update details, but apply starter tokens ONLY when provisioning accounts the first time
     await User.findOneAndUpdate(
       { id: data.id },
       {
-        id: data.id,
-        email: data.email_addresses?.[0]?.email_address || "",
-        name: `${data.first_name || ""} ${data.last_name || ""}`.trim() || "Clerk User",
-        image: data.image_url || "",
-        credits: CREDIT_PRICES.signup,
+        $set: {
+          id: data.id,
+          email: data.email_addresses?.[0]?.email_address || "",
+          name:
+            `${data.first_name || ""} ${data.last_name || ""}`.trim() ||
+            "Clerk User",
+          image: data.image_url || "",
+        },
+        $setOnInsert: {
+          credits: CREDIT_PRICES.signup, // Prevents subsequent profile saves from resetting existing balance
+        },
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
   } else if (type === "user.deleted") {
     await User.deleteOne({ id: data.id });
   } else if (type === "paymentAttempt.updated") {
-    if ((data.charge_type === "recurring" || data.charge_type === "checkout") && data.status === "paid") {
-      const planId = data.subscription_items?.[0]?.plan?.slug || data.subscription_item?.plan?.slug;
-      const credits = planId === "premium" ? CREDIT_PRICES.premium : planId === "pro" ? CREDIT_PRICES.pro : 0;
+    if (
+      (data.charge_type === "recurring" || data.charge_type === "checkout") &&
+      data.status === "paid"
+    ) {
+      const planId =
+        data.subscription_items?.[0]?.plan?.slug ||
+        data.subscription_item?.plan?.slug;
+      const credits =
+        planId === "premium"
+          ? CREDIT_PRICES.premium
+          : planId === "pro"
+            ? CREDIT_PRICES.pro
+            : 0;
       if (credits) {
-        await User.findOneAndUpdate({ id: data.payer?.user_id }, { $inc: { credits } }, { upsert: true, new: true, setDefaultsOnInsert: true });
+        await User.findOneAndUpdate(
+          { id: data.payer?.user_id },
+          { $inc: { credits } },
+          { upsert: true, new: true, setDefaultsOnInsert: true },
+        );
       }
     }
   }
