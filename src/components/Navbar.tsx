@@ -108,13 +108,10 @@ export default function Navbar() {
             </PrimaryButton>
           </div>
         ) : (
-          <div className="flex gap-2">
-            <GhostButton
-              onClick={() => router.push("/plans")}
-              className="border-none text-gray-300 sm:py-1.5"
-            >
-              Credits: {credits}
-            </GhostButton>
+          <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-full pl-3 pr-1 py-1">
+            <span className="text-xs font-semibold text-gray-300 select-none">
+              Credits: <span className="text-pink-500">{credits}</span>
+            </span>
             <UserButton>
               <UserButton.MenuItems>
                 <UserButton.Action
