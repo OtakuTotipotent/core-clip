@@ -24,22 +24,10 @@ export default function RootLayout({
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: dark,
         variables: {
-          colorPrimary: "#db2777", // pink-600
-          colorBackground: "#0a0a0a", // deep black matching your theme
-          colorForeground: "#f3f4f6", // gray-100
-          colorMutedForeground: "#9ca3af", // gray-400
+          colorBackground: "#f472b6", // pink-600
+          colorForeground: "#000", // gray-100
           borderRadius: "0.75rem",
-        },
-        elements: {
-          card: "border border-white/10 bg-black/80 backdrop-blur-xl shadow-2xl",
-          alternativeMethodsBlockButton:
-            "border border-white/10 hover:bg-white/5 transition-all text-white",
-          formButtonPrimary:
-            "bg-pink-600 hover:bg-pink-700 text-white transition-all rounded-full",
-          userButtonPopoverCard:
-            "border border-white/10 bg-[#0a0a0a] backdrop-blur-md",
         },
       }}
     >

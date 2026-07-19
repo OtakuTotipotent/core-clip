@@ -115,7 +115,6 @@ export default function Navbar() {
             >
               Credits: {credits}
             </GhostButton>
-            {/* <UserButton afterSignOutUrl="/"> */}
             <UserButton>
               <UserButton.MenuItems>
                 <UserButton.Action
