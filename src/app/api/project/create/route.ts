@@ -16,71 +16,92 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Helper utility to pause execution between parallel hits
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function callFreeEngine(
+async function callFreeEngineWithFallback(
   promptText: string,
   width: number,
   height: number,
-  modelName: string,
-  retries = 3,
+  preferredModel: string,
+  fallbackModels: string[] = ["flux-realism", "flux", "turbo"],
 ): Promise<string> {
   const sanitizedPrompt = promptText.replace(/https?:\/\/[^\s]+/g, "").trim();
   const encodedPrompt = encodeURIComponent(sanitizedPrompt);
 
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    const randomSeed = Math.floor(Math.random() * 999999) + attempt;
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000);
+  // Combine all engine candidates into an ordered array
+  const modelsToTry = [
+    preferredModel,
+    ...fallbackModels.filter((m) => m !== preferredModel),
+  ];
 
-    try {
-      // Diversify query parameter composition to bypass strict endpoint signature tracking
-      const response = await fetch(
-        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true&seed=${randomSeed}&model=${modelName}&enhance=false`,
-        {
-          signal: controller.signal,
-          headers: {
-            Accept: "image/webp,image/apng,image/*",
-            "User-Agent": `CoreClipAdEngine/${1.0 + attempt}`,
-          },
-        },
-      );
+  for (const currentModel of modelsToTry) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      // 45-second extended timeout to avoid premature "Aborted" errors during heavy API loads
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 45000);
+      const randomSeed = Math.floor(Math.random() * 999999);
 
-      clearTimeout(timeoutId);
-
-      // If hit by a 429 rate limit or server error, back off and retry before failing completely
-      if (response.status === 429 || !response.ok) {
-        throw new Error(
-          `Engine ${modelName} returned status ${response.status}`,
+      try {
+        console.log(
+          `Pipeline hitting Engine: ${currentModel} (Attempt ${attempt}/2)`,
         );
+
+        const response = await fetch(
+          `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true&seed=${randomSeed}&model=${currentModel}&enhance=false`,
+          {
+            signal: controller.signal,
+            headers: {
+              Accept: "image/webp,image/*",
+              "User-Agent": `CoreClipEngine/2.0-${currentModel}`,
+            },
+          },
+        );
+
+        clearTimeout(timeoutId);
+
+        if (response.status === 429) {
+          console.warn(
+            `Engine ${currentModel} rate limited (429). Retrying with backoff...`,
+          );
+          clearTimeout(timeoutId);
+          await delay(3000 * attempt);
+          continue;
+        }
+
+        if (!response.ok) {
+          throw new Error(`Engine status: ${response.status}`);
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        if (arrayBuffer.byteLength < 1000) {
+          throw new Error("Invalid or empty image byte payload returned");
+        }
+
+        const base64 = Buffer.from(arrayBuffer).toString("base64");
+        const uploadResult = await cloudinary.uploader.upload(
+          `data:image/jpeg;base64,${base64}`,
+          { resource_type: "image", folder: "coreclip_ads" },
+        );
+
+        return uploadResult.secure_url;
+      } catch (error) {
+        clearTimeout(timeoutId);
+        console.warn(
+          `Engine ${currentModel} failed on attempt ${attempt}:`,
+          (error as Error).message,
+        );
+
+        // Wait before trying the next model variant
+        await delay(2000);
       }
-
-      const arrayBuffer = await response.arrayBuffer();
-      const base64 = Buffer.from(arrayBuffer).toString("base64");
-
-      const uploadResult = await cloudinary.uploader.upload(
-        `data:image/jpeg;base64,${base64}`,
-        { resource_type: "image", folder: "coreclip_ads" },
-      );
-
-      return uploadResult.secure_url;
-    } catch (error) {
-      clearTimeout(timeoutId);
-      console.warn(
-        `Attempt ${attempt} on engine ${modelName} encountered an issue:`,
-        (error as Error).message,
-      );
-
-      if (attempt === retries) throw error;
-      // Exponential backoff delay time: wait longer on subsequent hits
-      await delay(2000 * attempt);
     }
+    console.log(
+      `Switching from failed engine ${currentModel} to next fallback model option...`,
+    );
   }
-  throw new Error("Pipeline execution error.");
+  throw new Error("All backup rendering channels exhausted.");
 }
 
-// Background Task orchestrating 3 independent free pipelines sequentially
 async function generateTripleConceptsTask(
   projectId: string,
   userId: string,
@@ -96,77 +117,64 @@ async function generateTripleConceptsTask(
     const height =
       aspectRatio === "16:9" ? 720 : aspectRatio === "1:1" ? 1024 : 1024;
 
-    const contextualBase = `Commercial product advertisement for [${productName}: ${productDesc}]. Campaign context: ${userPrompt}. Focus composition directly around the item profile layout visible in: ${productImageUrl}.`;
+    const contextualBase = `High-end commercial ad for [${productName}: ${productDesc}]. Context: ${userPrompt}. Focus composition cleanly around item details from source asset: ${productImageUrl}.`;
 
-    // 3 Unique layout prompt vectors to generate diverse commercial results
-    const promptA = `Award-winning commercial cosmetic/product photography, clean sharp studio lighting, deep sophisticated shadows, elegant black stone display stand, ultra-detailed 8k resolution. ${contextualBase}`;
-    const promptB = `Vibrant high-fashion editorial showcase print ad look, luxury sunbeams reflection, dramatic cinematic depth of field, professional agency layout look. ${contextualBase}`;
-    const promptC = `Futuristic technological catalog presentation style, minimalist high-end background platform layout, subtle glowing ambient neon lighting details. ${contextualBase}`;
+    const promptA = `Professional studio product photograph, sharp clean product presentation display stand placement, dynamic lighting, dramatic soft shadows, high-end 8k commercial resolution. ${contextualBase}`;
+    const promptB = `Vibrant luxury lifestyle editorial look, natural light beams bouncing, beautiful deep depth of field rendering, clean advertising agency copy space alignment. ${contextualBase}`;
+    const promptC = `Futuristic technological catalog presentation layout, minimalist premium floating block design platform, clean ambient soft colored lighting details. ${contextualBase}`;
 
-    const updatePayload: {
-      isGenerating: boolean;
-      generatedImageA?: string;
-      generatedImageB?: string;
-      generatedImageC?: string;
-      error?: string;
-    } = { isGenerating: false };
+    const updatePayload: any = { isGenerating: false };
 
-    // --- Execution Pattern: Sequential Staggering with Fail-safes ---
-
-    // Engine 1: Flux Realism Mode
+    // Run calls sequentially with a staggered delay to prevent rate-limiting on the server IP
     try {
-      updatePayload.generatedImageA = await callFreeEngine(
+      updatePayload.generatedImageA = await callFreeEngineWithFallback(
         promptA,
         width,
         height,
         "flux-realism",
       );
     } catch (err) {
-      console.error("Concept Channel A failed:", (err as Error).message);
+      console.error("Concept A failed completely:", (err as Error).message);
     }
 
-    // Short stagger window to let the remote API gateway refresh
-    await delay(1500);
+    await delay(2500); // Wait for the server queue to clear before making the next call
 
-    // Engine 2: Flux Base Mode
     try {
-      updatePayload.generatedImageB = await callFreeEngine(
+      updatePayload.generatedImageB = await callFreeEngineWithFallback(
         promptB,
         width,
         height,
         "flux",
       );
     } catch (err) {
-      console.error("Concept Channel B failed:", (err as Error).message);
+      console.error("Concept B failed completely:", (err as Error).message);
     }
 
-    await delay(1500);
+    await delay(2500);
 
-    // Engine 3: Turbo Performance Mode
     try {
-      updatePayload.generatedImageC = await callFreeEngine(
+      updatePayload.generatedImageC = await callFreeEngineWithFallback(
         promptC,
         width,
         height,
         "turbo",
       );
     } catch (err) {
-      console.error("Concept Channel C failed:", (err as Error).message);
+      console.error("Concept C failed completely:", (err as Error).message);
     }
 
-    // Verify at least one successful asset exists before completing workspace parameters
+    // Verify at least one image was successfully generated so the user isn't left with empty results
     if (
       !updatePayload.generatedImageA &&
       !updatePayload.generatedImageB &&
       !updatePayload.generatedImageC
     ) {
-      throw new Error(
-        "All three alternative free pipeline sources returned rate limit failures.",
-      );
+      throw new Error("All three image generation channels failed.");
     }
 
     await connectToDatabase();
     await Project.findByIdAndUpdate(projectId, updatePayload);
+    console.log("Triple-variant generation successfully saved to workspace!");
   } catch (error) {
     console.error("Pipeline Orchestrator Error:", error);
     await connectToDatabase();
