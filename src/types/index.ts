@@ -19,6 +19,7 @@ export interface ProjectRecord {
   uploadedImages?: string[];
   generatedImageA?: string;
   generatedImageB?: string;
+  generatedImageC?: string;
   isGenerating?: boolean;
   isPublished?: boolean;
   error?: string;
