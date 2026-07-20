@@ -4,6 +4,7 @@ export interface UserRecord {
   name?: string;
   image?: string;
   credits?: number;
+  planSlug?: "starter" | "pro" | "premium";
   createdAt?: string;
   updatedAt?: string;
 }

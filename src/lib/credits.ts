@@ -17,6 +17,7 @@ export async function ensureUserRecord(userId: string) {
         name: "Clerk User",
         image: "",
         credits: CREDIT_PRICES.signup,
+        planSlug: "starter",
       },
     },
     { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },

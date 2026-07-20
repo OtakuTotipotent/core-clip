@@ -23,7 +23,7 @@ export default function Footer() {
               className="h-14 w-auto"
               style={{
                 width: "auto",
-                height: "56",
+                height: "56px",
               }}
               width={120}
               height={56}

@@ -7,11 +7,12 @@ import { CREDIT_PRICES } from "@/lib/credits";
 
 export async function POST(req: NextRequest) {
   const headerPayload = await headers();
-  const svix_id = headerPayload.get("svix-id");
-  const svix_timestamp = headerPayload.get("svix-timestamp");
-  const svix_signature = headerPayload.get("svix-signature");
 
-  if (!svix_id || !svix_timestamp || !svix_signature) {
+  const svixId = headerPayload.get("svix-id");
+  const svixTimestamp = headerPayload.get("svix-timestamp");
+  const svixSignature = headerPayload.get("svix-signature");
+
+  if (!svixId || !svixTimestamp || !svixSignature) {
     return NextResponse.json(
       { message: "Missing Svix headers" },
       { status: 400 },
@@ -19,65 +20,127 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.text();
-  const wh = new Webhook(process.env.CLERK_WEBHOOK_SIGNING_SECRET || "");
-  let evt: { type: string; data: Record<string, any> };
+
+  const webhook = new Webhook(process.env.CLERK_WEBHOOK_SIGNING_SECRET || "");
+
+  let event: { type: string; data: Record<string, any> };
+
   try {
-    evt = wh.verify(body, {
-      "svix-id": svix_id,
-      "svix-timestamp": svix_timestamp,
-      "svix-signature": svix_signature,
+    event = webhook.verify(body, {
+      "svix-id": svixId,
+      "svix-timestamp": svixTimestamp,
+      "svix-signature": svixSignature,
     }) as { type: string; data: Record<string, any> };
   } catch {
     return NextResponse.json({ message: "Invalid signature" }, { status: 400 });
   }
 
   await connectToDatabase();
-  const { type, data } = evt;
 
-  if (type === "user.created" || type === "user.updated") {
-    // Separate fields: update details, but apply starter tokens ONLY when provisioning accounts the first time
-    await User.findOneAndUpdate(
-      { id: data.id },
-      {
-        $set: {
-          id: data.id,
-          email: data.email_addresses?.[0]?.email_address || "",
-          name:
-            `${data.first_name || ""} ${data.last_name || ""}`.trim() ||
-            "Clerk User",
-          image: data.image_url || "",
+  const { type, data } = event;
+
+  console.log("Webhook:", type);
+  console.dir(data, { depth: null });
+
+  switch (type) {
+    case "user.created":
+    case "user.updated": {
+      await User.findOneAndUpdate(
+        { id: data.id },
+        {
+          $set: {
+            id: data.id,
+            email: data.email_addresses?.[0]?.email_address ?? "",
+            name:
+              `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim() ||
+              "Clerk User",
+            image: data.image_url ?? "",
+          },
+          $setOnInsert: {
+            credits: CREDIT_PRICES.signup,
+            planSlug: "starter",
+          },
         },
-        $setOnInsert: {
-          credits: CREDIT_PRICES.signup, // Prevents subsequent profile saves from resetting existing balance
+        {
+          upsert: true,
+          returnDocument: "after",
+          setDefaultsOnInsert: true,
         },
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
-    );
-  } else if (type === "user.deleted") {
-    await User.deleteOne({ id: data.id });
-  } else if (type === "paymentAttempt.updated") {
-    if (
-      (data.charge_type === "recurring" || data.charge_type === "checkout") &&
-      data.status === "paid"
-    ) {
-      const planId =
-        data.subscription_items?.[0]?.plan?.slug ||
-        data.subscription_item?.plan?.slug;
-      const credits =
-        planId === "premium"
-          ? CREDIT_PRICES.premium
-          : planId === "pro"
-            ? CREDIT_PRICES.pro
-            : 0;
-      if (credits) {
+      );
+
+      break;
+    }
+
+    case "user.deleted": {
+      await User.deleteOne({ id: data.id });
+      break;
+    }
+
+    case "subscriptionItem.active": {
+      const clerkUserId = data.payer?.user_id;
+
+      if (!clerkUserId) break;
+
+      const slug = String(data.plan?.slug ?? "").toLowerCase();
+
+      if (slug === "pro") {
         await User.findOneAndUpdate(
-          { id: data.payer?.user_id },
-          { $inc: { credits } },
-          { upsert: true, new: true, setDefaultsOnInsert: true },
+          { id: clerkUserId },
+          {
+            $set: {
+              planSlug: "pro",
+            },
+            $inc: {
+              credits: CREDIT_PRICES.pro,
+            },
+          },
+          {
+            returnDocument: "after",
+          },
+        );
+      } else if (slug === "premium") {
+        await User.findOneAndUpdate(
+          { id: clerkUserId },
+          {
+            $set: {
+              planSlug: "premium",
+            },
+            $inc: {
+              credits: CREDIT_PRICES.premium,
+            },
+          },
+          {
+            returnDocument: "after",
+          },
         );
       }
+
+      break;
+    }
+
+    case "subscriptionItem.canceled":
+    case "subscriptionItem.ended": {
+      const clerkUserId = data.payer?.user_id;
+
+      if (!clerkUserId) break;
+
+      await User.findOneAndUpdate(
+        { id: clerkUserId },
+        {
+          $set: {
+            planSlug: "starter",
+          },
+        },
+        {
+          returnDocument: "after",
+        },
+      );
+
+      break;
     }
   }
 
-  return NextResponse.json({ received: true, type });
+  return NextResponse.json({
+    received: true,
+  });
 }

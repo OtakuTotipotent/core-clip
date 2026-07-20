@@ -7,6 +7,11 @@ const UserSchema = new Schema(
     name: { type: String, default: "Clerk User" },
     image: { type: String, default: "" },
     credits: { type: Number, default: 20, min: 0 },
+    planSlug: {
+      type: String,
+      enum: ["starter", "pro", "premium"],
+      default: "starter",
+    },
   },
   { timestamps: true },
 );

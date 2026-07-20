@@ -11,5 +11,13 @@ export async function GET() {
 
   await connectToDatabase();
   const user = await ensureUserRecord(userId);
-  return NextResponse.json({ credits: user?.credits ?? 0 });
+
+  // Directly access the underlying object property or fall back cleanly
+  const rawUser = typeof user.toObject === "function" ? user.toObject() : user;
+
+  return NextResponse.json({
+    credits: rawUser.credits ?? 0,
+    planSlug: rawUser.planSlug ?? "starter",
+    userId: rawUser.id,
+  });
 }

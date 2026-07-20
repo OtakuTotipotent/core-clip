@@ -8,7 +8,7 @@ import {
   SparkleIcon,
   XIcon,
 } from "lucide-react";
-import { GhostButton, PrimaryButton } from "./Buttons";
+import { PrimaryButton } from "./Buttons";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -25,6 +25,7 @@ export default function Navbar() {
   const { getToken } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [credits, setCredits] = useState(0);
+  const [planSlug, setPlanSlug] = useState("starter");
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -34,28 +35,42 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
-    if (!isUserLoaded) return;
+    if (!isUserLoaded || !user) return;
 
     const loadCredits = async () => {
       try {
         const token = await getToken();
+
         if (!token) {
           setCredits(0);
+          setPlanSlug("starter");
           return;
         }
+
         const res = await fetch("/api/user/credits", {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          cache: "no-store",
         });
+
+        if (!res.ok) return;
+
         const data = await res.json();
-        setCredits(data.credits || 0);
+
+        setCredits(data.credits ?? 0);
+        setPlanSlug(data.planSlug ?? "starter");
       } catch (error) {
         toast.error((error as Error).message);
       }
     };
 
-    if (user) {
-      void loadCredits();
-    }
+    void loadCredits();
+
+    window.addEventListener("focus", loadCredits);
+    return () => {
+      window.removeEventListener("focus", loadCredits);
+    };
   }, [getToken, isUserLoaded, pathname, user]);
 
   return (
@@ -72,7 +87,7 @@ export default function Navbar() {
             src="/logo.svg"
             alt="logo"
             className="h-12.5 w-auto"
-            style={{ width: "auto", height: "50" }}
+            style={{ width: "auto", height: "50px" }}
             width={96}
             height={32}
             priority
